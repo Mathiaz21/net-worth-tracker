@@ -1,7 +1,12 @@
 package NetWorthTracker;
 
+import DBConnection.DBUtils;
+
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Vector;
 
 public class AddTransactionBar extends JPanel {
 
@@ -38,13 +43,13 @@ public class AddTransactionBar extends JPanel {
 
     private void setupSwingComponents() {
 
-        this.amountField = new JTextField("100");
-        this.dateField = new JTextField("06/11/2024");
+        this.amountField = new JTextField("");
+        this.dateField = new JTextField(getTodaysDate());
         String[] transactionTypeList = {"Outcome", "Income", "Internal"};
         this.transactionTypeComboBox = new JComboBox(transactionTypeList);
         String[] accountList = {"Lydia", "Danske Bank", "Crédit Agricole"};
         this.accountChoiceComboBox = new JComboBox(accountList);
-        String[] categoryList = {"Basic Needs", "Social", "Personal Dev"};
+        Vector<String> categoryList = DBUtils.getOutcomeCategories();
         this.adaptableComboBox = new JComboBox(categoryList);
         this.descriptionField = new JTextField("Buying a Banana");
         this.submitButton = new JButton("Submit");
@@ -62,5 +67,11 @@ public class AddTransactionBar extends JPanel {
         this.add(this.descriptionField, this.constraints);
         this.constraints.gridx = 6;
         this.add(this.submitButton, this.constraints);
+    }
+
+    private static String getTodaysDate() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return today.format(formatter);
     }
 }
