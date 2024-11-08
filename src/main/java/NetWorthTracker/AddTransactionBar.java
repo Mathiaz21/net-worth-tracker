@@ -1,6 +1,8 @@
 package NetWorthTracker;
 
-import DBConnection.DBUtils;
+import DBConnection.DBCategoryComm;
+import FunctionalComponents.Category;
+import FunctionalComponents.GlobalInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
 public class AddTransactionBar extends JPanel {
+
+    private GlobalInfo globalInfo;
 
     private JTextField amountField;
     private JTextField dateField;
@@ -21,8 +25,9 @@ public class AddTransactionBar extends JPanel {
     GridBagLayout gridBagLayout;
     GridBagConstraints constraints;
 
-    public AddTransactionBar() {
+    public AddTransactionBar(GlobalInfo globalInfo) {
 
+        this.globalInfo = globalInfo;
         this.setupGridBag();
         this.setupSwingComponents();
     }
@@ -47,9 +52,9 @@ public class AddTransactionBar extends JPanel {
         this.dateField = new JTextField(getTodaysDate());
         String[] transactionTypeList = {"Outcome", "Income", "Internal"};
         this.transactionTypeComboBox = new JComboBox(transactionTypeList);
-        String[] accountList = {"Lydia", "Danske Bank", "Crédit Agricole"};
+        Vector<String> accountList = globalInfo.getAccountNames();
         this.accountChoiceComboBox = new JComboBox(accountList);
-        Vector<String> categoryList = DBUtils.getOutcomeCategories();
+        Vector<String> categoryList = globalInfo.getOutcomeCategoriesNames();
         this.adaptableComboBox = new JComboBox(categoryList);
         this.descriptionField = new JTextField("Buying a Banana");
         this.submitButton = new JButton("Submit");

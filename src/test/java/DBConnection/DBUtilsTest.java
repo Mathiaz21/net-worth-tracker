@@ -1,13 +1,14 @@
 package DBConnection;
 
+import FunctionalComponents.Account;
+import FunctionalComponents.Category;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Vector;
 
 public class DBUtilsTest {
 
@@ -23,14 +24,14 @@ public class DBUtilsTest {
                 4,
                 "Getting me some food"
         );
-        DBUtils.addTransactionInDB(transaction);
+        DBTransactionComm.addTransactionInDB(transaction);
     }
 
     @org.junit.Test
     @Test
     public void testTransactionDeleting(){
         int idOfDeletion = 2;
-        DBUtils.deleteTransactionById(idOfDeletion);
+        DBTransactionComm.deleteTransactionById(idOfDeletion);
     }
 
     @org.junit.Test
@@ -46,15 +47,31 @@ public class DBUtilsTest {
                 4,
                 "Okay I pull up"
         );
-        DBUtils.updateTransactionInDB(id, transaction);
+        DBTransactionComm.updateTransactionInDB(id, transaction);
     }
 
     @org.junit.Test
     @Test
     public void testGetAllTransactions(){
-        List<Transaction> transactions = DBUtils.getAllTransactions();
+        List<Transaction> transactions = DBTransactionComm.getAllTransactions();
         for(Transaction transaction : transactions){
             transaction.print();
+        }
+    }
+
+    @org.junit.Test
+    @Test
+    public void testGetCategories() {
+        Vector<Category> categories = DBCategoryComm.getIncomeCategories();
+        for(Category category : categories){ category.print(); }
+    }
+
+    @org.junit.Test
+    @Test
+    public void testGetAccounts() {
+        Vector<Account> accounts = DBAccountComm.getAccounts();
+        for(Account account : accounts){
+            account.print();
         }
     }
 }
