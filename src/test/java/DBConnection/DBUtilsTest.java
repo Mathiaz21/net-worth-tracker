@@ -74,4 +74,11 @@ public class DBUtilsTest {
             account.print();
         }
     }
+
+
+    @org.junit.Test
+    @Test
+    public void testRenameAccount() {
+        DBAccountComm.renameAccount(0, "Sumeria");
+    }
 }

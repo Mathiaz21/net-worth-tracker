@@ -1,6 +1,7 @@
 package DBConnection;
 
 import FunctionalComponents.Account;
+import FunctionalComponents.Transaction;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,9 @@ public class DBAccountComm {
 
     private static final String accountsQuery = "SELECT accountName, accountId FROM accounts";
     private static final String insertNewAccountQuery = "INSERT INTO transactions(accountName) VALUES (?)";
+    private static final String renameAccountByIdQuery =
+            "UPDATE accounts SET accountName = ?" +
+                    " WHERE accountId = ?";
 
     public static Vector<Account> getAccounts() {
         Vector<Account> accountVector = new Vector<>();
@@ -40,5 +44,16 @@ public class DBAccountComm {
         }
     }
 
-    //TODO : public static void renameAccount
+    public static void renameAccount(int accountId, String newName) {
+        try (var conn = DriverManager.getConnection(DBUtils.dbUrl);
+             var pstmt = conn.prepareStatement(renameAccountByIdQuery)) {
+            // set the parameters
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, accountId);
+            // update
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

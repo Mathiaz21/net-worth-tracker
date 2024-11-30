@@ -23,11 +23,16 @@ public class TransactionGraphicItem extends JPanel {
 
     public TransactionGraphicItem(Transaction transaction) {
         this.transaction = transaction;
+        this.setupSwing();
+
+    }
+
+    private void setupSwing() {
+//        this.setBackground(Color.WHITE);
         this.setLabels();
-        this.setLabelsSize();
+//        this.setLabelsSize();
         this.setupGridBag();
         this.placeLabels();
-
     }
 
     private void setupGridBag() {
@@ -37,7 +42,7 @@ public class TransactionGraphicItem extends JPanel {
         this.constraints = new GridBagConstraints();
         this.constraints.gridx = 0;
         this.constraints.gridy = 0;
-        this.constraints.insets = new Insets(10, 15, 10, 15);
+        this.constraints.insets = new Insets(0, 15, 0, 15);
     }
 
     private void setLabels() {
@@ -73,6 +78,7 @@ public class TransactionGraphicItem extends JPanel {
         this.multifunctionLabel.setSize(100, 15);
         this.descriptionLabel.setSize(200, 15);
     }
+
     private void placeLabels() {
         this.add(dateLabel, this.constraints);
         this.constraints.gridx = 1;

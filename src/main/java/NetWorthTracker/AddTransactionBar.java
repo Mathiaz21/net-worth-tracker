@@ -1,10 +1,12 @@
 package NetWorthTracker;
 
-import DBConnection.DBCategoryComm;
-import FunctionalComponents.Category;
+import GraphicComponents.AmountTextField;
 import FunctionalComponents.GlobalInfo;
-
+import FunctionalComponents.Transaction;
+import FunctionalComponents.TypeOfTransaction;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +16,9 @@ public class AddTransactionBar extends JPanel {
 
     private GlobalInfo globalInfo;
 
-    private JTextField amountField;
+    private Transaction localTransaction;
+
+    private AmountTextField amountTextField;
     private JTextField dateField;
     private JComboBox transactionTypeComboBox;
     private JComboBox accountChoiceComboBox;
@@ -28,8 +32,10 @@ public class AddTransactionBar extends JPanel {
     public AddTransactionBar(GlobalInfo globalInfo) {
 
         this.globalInfo = globalInfo;
+        this.localTransaction = new Transaction(-1, LocalDate.now(), 100, TypeOfTransaction.OUTCOME, 0, 0, 0, "");
         this.setupGridBag();
         this.setupSwingComponents();
+        this.addActionListenersToInputs();
     }
 
     private void setupGridBag() {
@@ -46,20 +52,33 @@ public class AddTransactionBar extends JPanel {
         this.constraints.gridy = 0;
     }
 
+    private void setUpLocalTransaction() {
+        int defaultAmount = 0;
+        LocalDate localDate = LocalDate.now();
+        TypeOfTransaction defaultTypeOfTransaction = TypeOfTransaction.OUTCOME;
+        int defaultOutcomeAccountId = 0;
+        int defaultIncomeAccountId = 0;
+        int defaultCategoryId = 0;
+        String emptyDescription = "";
+
+        this.localTransaction = new Transaction(localDate, defaultAmount, defaultTypeOfTransaction,
+                defaultOutcomeAccountId, defaultIncomeAccountId, defaultCategoryId, emptyDescription);
+    }
+
     private void setupSwingComponents() {
 
-        this.amountField = new JTextField("");
-        this.dateField = new JTextField(getTodaysDate());
+        this.amountTextField = new AmountTextField();
+        this.dateField = new JTextField(todayDateToString());
         String[] transactionTypeList = {"Outcome", "Income", "Internal"};
         this.transactionTypeComboBox = new JComboBox(transactionTypeList);
         Vector<String> accountList = globalInfo.getAccountNames();
         this.accountChoiceComboBox = new JComboBox(accountList);
         Vector<String> categoryList = globalInfo.getOutcomeCategoriesNames();
         this.adaptableComboBox = new JComboBox(categoryList);
-        this.descriptionField = new JTextField("Buying a Banana");
+        this.descriptionField = new JTextField("");
         this.submitButton = new JButton("Submit");
 
-        this.add(this.amountField, this.constraints);
+        this.add(this.amountTextField, this.constraints);
         this.constraints.gridx = 1;
         this.add(this.dateField, this.constraints);
         this.constraints.gridx = 2;
@@ -74,9 +93,47 @@ public class AddTransactionBar extends JPanel {
         this.add(this.submitButton, this.constraints);
     }
 
-    private static String getTodaysDate() {
+    private void addActionListenersToInputs() {
+        this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
+    }
+
+    private static String todayDateToString() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return today.format(formatter);
     }
+
+
+    private class amountInputListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateAmount();
+        }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateAmount();
+        }
+        @Override
+        public void changedUpdate(DocumentEvent e) {}
+        public void updateAmount() {
+        }
+    }
+
+    private class DescriptionInputListener implements DocumentListener {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            updateDescription();
+        }
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            updateDescription();
+        }
+        @Override // Only triggered for styled text
+        public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+        public void updateDescription() {
+            localTransaction.setDescription(descriptionField.getText());
+        }
+    }
+
+
 }

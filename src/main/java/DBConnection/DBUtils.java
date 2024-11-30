@@ -13,7 +13,7 @@ import java.util.Vector;
 
 public class DBUtils {
 
-    static final String dbUrl = "jdbc:sqlite:/home/mathias/net-worth-tracker.db";
+    static final String dbUrl = "jdbc:sqlite:/home/mathias/.net-worth-tracker/net-worth-tracker.db";
 
 
     public static void testConnection() {
