@@ -32,9 +32,6 @@ public class AmountTextField extends JTextField {
 
     public void tryToUpdateLocalTransaction(Transaction localTransaction) {
         TextFieldExtraction textFieldExtraction = new TextFieldExtraction(this.getText());
-        System.out.println("text extraction : ");
-        System.out.println(textFieldExtraction.amount);
-        System.out.println(textFieldExtraction.valid);
         if( textFieldExtraction.valid){
             localTransaction.setAmountInCents(textFieldExtraction.amount);
         }

@@ -4,6 +4,7 @@ import GraphicComponents.AddTransactionBarComponents.AmountTextField;
 import FunctionalComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
+import GraphicComponents.AddTransactionBarComponents.DateTextField;
 import GraphicComponents.AddTransactionBarComponents.SubmitButton;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ public class AddTransactionBar extends JPanel {
     private Transaction localTransaction;
 
     private AmountTextField amountTextField;
-    private JTextField dateField;
+    private DateTextField dateField;
     private JComboBox transactionTypeComboBox;
     private JComboBox accountChoiceComboBox;
     private JComboBox adaptableComboBox;
@@ -70,7 +71,7 @@ public class AddTransactionBar extends JPanel {
     private void setupSwingComponents() {
 
         this.amountTextField = new AmountTextField(this.localTransaction);
-        this.dateField = new JTextField(todayDateToString());
+        this.dateField = new DateTextField(this.localTransaction);
         String[] transactionTypeList = {"Outcome", "Income", "Internal"};
         this.transactionTypeComboBox = new JComboBox(transactionTypeList);
         Vector<String> accountList = globalInfo.getAccountNames();
@@ -97,28 +98,6 @@ public class AddTransactionBar extends JPanel {
 
     private void addActionListenersToInputs() {
         this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
-    }
-
-    private static String todayDateToString() {
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return today.format(formatter);
-    }
-
-
-    private class amountInputListener implements DocumentListener {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateAmount();
-        }
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateAmount();
-        }
-        @Override
-        public void changedUpdate(DocumentEvent e) {}
-        public void updateAmount() {
-        }
     }
 
     private class DescriptionInputListener implements DocumentListener {
