@@ -1,9 +1,11 @@
 package NetWorthTracker;
 
-import GraphicComponents.AmountTextField;
+import GraphicComponents.AddTransactionBarComponents.AmountTextField;
 import FunctionalComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
+import GraphicComponents.AddTransactionBarComponents.SubmitButton;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,7 +26,7 @@ public class AddTransactionBar extends JPanel {
     private JComboBox accountChoiceComboBox;
     private JComboBox adaptableComboBox;
     private JTextField descriptionField;
-    private JButton submitButton;
+    private SubmitButton submitButton;
 
     GridBagLayout gridBagLayout;
     GridBagConstraints constraints;
@@ -67,7 +69,7 @@ public class AddTransactionBar extends JPanel {
 
     private void setupSwingComponents() {
 
-        this.amountTextField = new AmountTextField();
+        this.amountTextField = new AmountTextField(this.localTransaction);
         this.dateField = new JTextField(todayDateToString());
         String[] transactionTypeList = {"Outcome", "Income", "Internal"};
         this.transactionTypeComboBox = new JComboBox(transactionTypeList);
@@ -76,7 +78,7 @@ public class AddTransactionBar extends JPanel {
         Vector<String> categoryList = globalInfo.getOutcomeCategoriesNames();
         this.adaptableComboBox = new JComboBox(categoryList);
         this.descriptionField = new JTextField("");
-        this.submitButton = new JButton("Submit");
+        this.submitButton = new SubmitButton(this.localTransaction);
 
         this.add(this.amountTextField, this.constraints);
         this.constraints.gridx = 1;
