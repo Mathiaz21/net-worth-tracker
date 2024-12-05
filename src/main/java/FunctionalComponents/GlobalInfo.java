@@ -36,7 +36,7 @@ public class GlobalInfo {
     }
 
 
-    public String AccountIndexToName(int index) {
+    public String accountIndexToName(int index) {
 
         for (Account a : this.listOfAccounts)
             if (a.getId() == index)

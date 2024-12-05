@@ -7,9 +7,6 @@ import java.awt.*;
 
 public class TransactionGraphicItem extends JPanel {
 
-    String[] temporaryAccountList = {"Sumeria", "Danske Bank", "Caisse d'Epargne", "Bahamas Offshore"};
-    String[] temporaryCategoryList = {"Food", "Leisure", "Transport", "Skiing", "Buying shoes"};
-
     GlobalInfo globalInfo;
 
     Transaction transaction;
@@ -32,9 +29,7 @@ public class TransactionGraphicItem extends JPanel {
     }
 
     private void setupSwing() {
-//        this.setBackground(Color.WHITE);
         this.setLabels();
-//        this.setLabelsSize();
         this.setupGridBag();
         this.placeLabels();
     }
@@ -56,7 +51,7 @@ public class TransactionGraphicItem extends JPanel {
         this.typeLabel = new JLabel(this.transaction.getType().toString());
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
         final int accountId = this.transaction.getOutcomeAccountId();
-        this.primaryAccountLabel = new JLabel( globalInfo.AccountIndexToName(accountId) );
+        this.primaryAccountLabel = new JLabel( globalInfo.accountIndexToName(accountId) );
 
         switch (this.transaction.getType()) {
             case OUTCOME:
@@ -66,20 +61,11 @@ public class TransactionGraphicItem extends JPanel {
                 break;
             case INTERNAL:
                 final int accountId2 = this.transaction.getIncomeAccountId();
-                this.multifunctionLabel = new JLabel(globalInfo.categoryIndexToName(accountId2));
+                this.multifunctionLabel = new JLabel(globalInfo.accountIndexToName(accountId2));
                 break;
         }
     }
 
-
-    private void setLabelsSize() {
-        this.dateLabel.setSize(100, 15);
-        this.amountLabel.setSize(100, 15);
-        this.typeLabel.setSize(100, 15);
-        this.primaryAccountLabel.setSize(100, 15);
-        this.multifunctionLabel.setSize(100, 15);
-        this.descriptionLabel.setSize(200, 15);
-    }
 
     private void placeLabels() {
         this.add(dateLabel, this.constraints);
