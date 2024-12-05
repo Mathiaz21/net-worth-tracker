@@ -1,6 +1,7 @@
 package NetWorthTracker;
 
 import DBConnection.DBTransactionComm;
+import FunctionalComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
 import GraphicComponents.TransactionGraphicItem;
@@ -12,8 +13,11 @@ import java.util.Vector;
 
 public class TransactionListTab extends JPanel {
 
+    GlobalInfo globalInfo;
     Vector<Transaction> transactions;
-    public TransactionListTab() {
+    public TransactionListTab(GlobalInfo globalInfo) {
+
+        this.globalInfo = globalInfo;
         this.loadAllTransactions();
         this.setUpSwing();
         this.addAllTransactionsItems();
@@ -29,7 +33,7 @@ public class TransactionListTab extends JPanel {
 
     private void addAllTransactionsItems() {
         for (Transaction transaction : transactions) {
-            this.add(new TransactionGraphicItem(transaction));
+            this.add(new TransactionGraphicItem(transaction, globalInfo));
         }
     }
 }

@@ -24,24 +24,38 @@ public class GlobalInfo {
         this.listOfOutcomeCategories = DBCategoryComm.getOutcomeCategories();
     }
 
-    public Vector<String> getAccountNames() {
-        Vector<String> accountNames = new Vector<>();
-        for(Account a : this.listOfAccounts)
-            accountNames.add(a.getName());
-        return accountNames;
+
+    public Vector<Account> getAccounts() {
+        return listOfAccounts;
+    }
+    public Vector<Category> getOutcomeCategories() {
+        return listOfOutcomeCategories;
+    }
+    public Vector<Category> getIncomeCategories() {
+        return listOfIncomeCategories;
     }
 
-    public Vector<String> getOutcomeCategoriesNames() {
-        Vector<String> outcomeCategoriesNames = new Vector<>();
-        for(Category c : this.listOfOutcomeCategories)
-            outcomeCategoriesNames.add(c.getName());
-        return outcomeCategoriesNames;
+
+    public String AccountIndexToName(int index) {
+
+        for (Account a : this.listOfAccounts)
+            if (a.getId() == index)
+                return a.getName();
+        String ExceptionString = String.format("Account %d does not exist", index);
+        throw new IndexOutOfBoundsException(ExceptionString);
     }
 
-    public Vector<String> getIncomeCategoriesNames() {
-        Vector<String> incomeCategoriesNames = new Vector<>();
-        for(Category c : this.listOfIncomeCategories)
-            incomeCategoriesNames.add(c.getName());
-        return incomeCategoriesNames;
+    public String categoryIndexToName(int index) {
+
+        for (Category outcomeCategory : listOfOutcomeCategories)
+            if (outcomeCategory.getId() == index)
+                return outcomeCategory.getName();
+
+        for (Category incomeCategory : listOfIncomeCategories)
+            if (incomeCategory.getId() == index)
+                return incomeCategory.getName();
+
+        String ExceptionString = String.format("Category %d does not exist", index);
+        throw new IndexOutOfBoundsException(ExceptionString);
     }
 }

@@ -16,11 +16,13 @@ public class MainFrame extends JFrame {
         super("NetWorth Tracker");
         this.globalInfo = new GlobalInfo();
         this.setupFrameParameters();
-        this.mainTabbedPane = new MainTabbedPane();
+
+        this.addTransactionBar = new AddTransactionBar(this.globalInfo);
+        this.add(addTransactionBar, BorderLayout.SOUTH);
+
+        this.mainTabbedPane = new MainTabbedPane(this.globalInfo);
         this.add(mainTabbedPane, BorderLayout.CENTER);
 
-        this.addTransactionBar = new AddTransactionBar(globalInfo);
-        this.add(addTransactionBar, BorderLayout.SOUTH);
 
         this.setVisible(true);
     }

@@ -1,5 +1,6 @@
 package NetWorthTracker;
 
+import FunctionalComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
 import GraphicComponents.QuadPanel;
@@ -9,11 +10,14 @@ import java.time.LocalDate;
 
 public class MainTabbedPane extends JTabbedPane {
 
-    public MainTabbedPane() {
+    GlobalInfo globalInfo;
+
+    public MainTabbedPane(GlobalInfo globalInfo) {
         
         super();
+        this.globalInfo = globalInfo;
         JPanel examplePanel = new JPanel();
-        JPanel transactionListTab = new TransactionListTab();
+        JPanel transactionListTab = new TransactionListTab(globalInfo);
         JPanel thirdPanel = new JPanel();
         JPanel fourthPanel = new JPanel();
 

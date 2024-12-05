@@ -1,5 +1,6 @@
 package GraphicComponents;
 
+import FunctionalComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +9,8 @@ public class TransactionGraphicItem extends JPanel {
 
     String[] temporaryAccountList = {"Sumeria", "Danske Bank", "Caisse d'Epargne", "Bahamas Offshore"};
     String[] temporaryCategoryList = {"Food", "Leisure", "Transport", "Skiing", "Buying shoes"};
+
+    GlobalInfo globalInfo;
 
     Transaction transaction;
 
@@ -21,8 +24,9 @@ public class TransactionGraphicItem extends JPanel {
     JLabel multifunctionLabel;
     JLabel descriptionLabel;
 
-    public TransactionGraphicItem(Transaction transaction) {
+    public TransactionGraphicItem(Transaction transaction, GlobalInfo globalInfo) {
         this.transaction = transaction;
+        this.globalInfo = globalInfo;
         this.setupSwing();
 
     }
@@ -46,26 +50,24 @@ public class TransactionGraphicItem extends JPanel {
     }
 
     private void setLabels() {
+
         this.dateLabel = new JLabel(this.transaction.getDate().toString());
         this.amountLabel = new JLabel(this.transaction.getAmountInCents() + "");
         this.typeLabel = new JLabel(this.transaction.getType().toString());
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
+        final int accountId = this.transaction.getOutcomeAccountId();
+        this.primaryAccountLabel = new JLabel( globalInfo.AccountIndexToName(accountId) );
+
         switch (this.transaction.getType()) {
             case OUTCOME:
-                final int outcomeAccountId = this.transaction.getOutcomeAccountId();
-                final int outCategoryId = this.transaction.getCategoryId();
-                this.primaryAccountLabel = new JLabel(temporaryAccountList[outcomeAccountId]);
-                this.multifunctionLabel = new JLabel(temporaryCategoryList[outCategoryId]);
             case INCOME:
-                final int incomeAccountId = this.transaction.getIncomeAccountId();
-                final int inCategoryId = this.transaction.getCategoryId();
-                this.primaryAccountLabel = new JLabel(temporaryAccountList[incomeAccountId]);
-                this.multifunctionLabel = new JLabel(temporaryCategoryList[inCategoryId]);
+                final int categoryId = this.transaction.getCategoryId();
+                this.multifunctionLabel = new JLabel( globalInfo.categoryIndexToName(categoryId) );
+                break;
             case INTERNAL:
-                final int outcomeAccountId2 = this.transaction.getOutcomeAccountId();
-                final int incomeAccountId2 = this.transaction.getIncomeAccountId();
-                this.primaryAccountLabel = new JLabel(temporaryAccountList[outcomeAccountId2]);
-                this.multifunctionLabel = new JLabel(temporaryAccountList[incomeAccountId2]);
+                final int accountId2 = this.transaction.getIncomeAccountId();
+                this.multifunctionLabel = new JLabel(globalInfo.categoryIndexToName(accountId2));
+                break;
         }
     }
 

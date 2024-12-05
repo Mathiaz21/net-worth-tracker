@@ -1,9 +1,7 @@
 package NetWorthTracker;
 
+import FunctionalComponents.*;
 import GraphicComponents.AddTransactionBarComponents.AmountTextField;
-import FunctionalComponents.GlobalInfo;
-import FunctionalComponents.Transaction;
-import FunctionalComponents.TypeOfTransaction;
 import GraphicComponents.AddTransactionBarComponents.DateTextField;
 import GraphicComponents.AddTransactionBarComponents.SubmitButton;
 
@@ -14,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.Vector;
+
+// TODO : SOLVE SYNCHRONISATION PROBLEMS WITH ACCOUNT ID
 
 public class AddTransactionBar extends JPanel {
 
@@ -72,10 +72,8 @@ public class AddTransactionBar extends JPanel {
         this.amountTextField = new AmountTextField(this.localTransaction);
         this.dateField = new DateTextField(this.localTransaction);
         this.transactionTypeComboBox = new JComboBox();
-        Vector<String> accountList = globalInfo.getAccountNames();
-        this.accountChoiceComboBox = new JComboBox(accountList);
-        Vector<String> categoryList = globalInfo.getOutcomeCategoriesNames();
-        this.adaptableComboBox = new JComboBox(categoryList);
+        this.accountChoiceComboBox = new JComboBox();
+        this.adaptableComboBox = new JComboBox();
         this.descriptionField = new JTextField("");
         this.submitButton = new SubmitButton(this.localTransaction);
 
@@ -97,6 +95,8 @@ public class AddTransactionBar extends JPanel {
     private void addActionListenersToInputs() {
         this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
         setupTransactionTypeComboBox();
+        setupAccountChoiceComboBox();
+        setupAdaptableComboBox();
     }
 
     private class DescriptionInputListener implements DocumentListener {
@@ -117,15 +117,102 @@ public class AddTransactionBar extends JPanel {
 
     private void setupTransactionTypeComboBox() {
 
+        this.transactionTypeComboBox.removeAllItems();
         for(TypeOfTransaction typeOfTransaction : TypeOfTransaction.values())
             this.transactionTypeComboBox.addItem(Transaction.transactionTypeToString(typeOfTransaction));
 
-        transactionTypeComboBox.addActionListener(new ActionListener() {
+        this.transactionTypeComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TypeOfTransaction localTransactionType = Transaction.intToTransactionType(transactionTypeComboBox.getSelectedIndex());
                 localTransaction.setType(localTransactionType);
+                setupAdaptableComboBox();
             }
         });
+    }
+
+    private void setupAccountChoiceComboBox() {
+
+        this.accountChoiceComboBox.removeAllItems();
+        Vector<Account> accountList = this.globalInfo.getAccounts();
+        for (Account account : accountList) {
+            this.accountChoiceComboBox.addItem(account.getName());
+        }
+
+        this.accountChoiceComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedAccountIndex = transactionTypeComboBox.getSelectedIndex();
+                TypeOfTransaction localTransactionType = localTransaction.getType();
+                switch (localTransactionType) {
+                    case OUTCOME:
+                    case INTERNAL:
+                        localTransaction.setOutcomeAccountId(selectedAccountIndex); break;
+                    case INCOME:
+                        localTransaction.setIncomeAccountId(selectedAccountIndex); break;
+                }
+            }
+        });
+    }
+
+    private void setupAdaptableComboBox() {
+
+        ActionListener[] actionListeners = this.adaptableComboBox.getActionListeners();
+        for (ActionListener actionListener : actionListeners) {
+            this.adaptableComboBox.removeActionListener(actionListener);
+        }
+        this.adaptableComboBox.removeAllItems();
+        switch (localTransaction.getType()){
+            case OUTCOME: {
+
+                Vector<Category> outcomeCategories = globalInfo.getOutcomeCategories();
+                for (Category category : outcomeCategories) {
+                    this.adaptableComboBox.addItem(category.getName());
+                }
+                this.adaptableComboBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int selectedIndex = adaptableComboBox.getSelectedIndex();
+                        int categoryIndex = outcomeCategories.get(selectedIndex).getId();
+                        localTransaction.setCategoryId(categoryIndex);
+                    }
+                });
+                break;
+            }
+            case INCOME: {
+
+                Vector<Category> incomeCategories = globalInfo.getIncomeCategories();
+                System.out.println(incomeCategories.size());
+                for (Category category : incomeCategories) {
+                    this.adaptableComboBox.addItem(category.getName());
+                }
+                this.adaptableComboBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int selectedIndex = adaptableComboBox.getSelectedIndex();
+                        int categoryIndex = incomeCategories.get(selectedIndex).getId();
+                        localTransaction.setCategoryId(categoryIndex);
+                    }
+                });
+                break;
+            }
+
+            case INTERNAL: {
+
+                Vector<Account> accounts = globalInfo.getAccounts();
+                for (Account account : accounts) {
+                    this.adaptableComboBox.addItem(account.getName());
+                }
+                this.adaptableComboBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int selectedIndex = adaptableComboBox.getSelectedIndex();
+                        localTransaction.setCategoryId(selectedIndex);
+                    }
+                });
+                break;
+            }
+
+        }
     }
 }
