@@ -8,17 +8,16 @@ import GraphicComponents.AddTransactionBarComponents.DateTextField;
 import GraphicComponents.AddTransactionBarComponents.SubmitButton;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Vector;
 
 public class AddTransactionBar extends JPanel {
 
     private GlobalInfo globalInfo;
-
     private Transaction localTransaction;
 
     private AmountTextField amountTextField;
@@ -72,8 +71,7 @@ public class AddTransactionBar extends JPanel {
 
         this.amountTextField = new AmountTextField(this.localTransaction);
         this.dateField = new DateTextField(this.localTransaction);
-        String[] transactionTypeList = {"Outcome", "Income", "Internal"};
-        this.transactionTypeComboBox = new JComboBox(transactionTypeList);
+        this.transactionTypeComboBox = new JComboBox();
         Vector<String> accountList = globalInfo.getAccountNames();
         this.accountChoiceComboBox = new JComboBox(accountList);
         Vector<String> categoryList = globalInfo.getOutcomeCategoriesNames();
@@ -98,6 +96,7 @@ public class AddTransactionBar extends JPanel {
 
     private void addActionListenersToInputs() {
         this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
+        setupTransactionTypeComboBox();
     }
 
     private class DescriptionInputListener implements DocumentListener {
@@ -116,5 +115,17 @@ public class AddTransactionBar extends JPanel {
         }
     }
 
+    private void setupTransactionTypeComboBox() {
 
+        for(TypeOfTransaction typeOfTransaction : TypeOfTransaction.values())
+            this.transactionTypeComboBox.addItem(Transaction.transactionTypeToString(typeOfTransaction));
+
+        transactionTypeComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TypeOfTransaction localTransactionType = Transaction.intToTransactionType(transactionTypeComboBox.getSelectedIndex());
+                localTransaction.setType(localTransactionType);
+            }
+        });
+    }
 }

@@ -31,13 +31,4 @@ public class DBUtils {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
     }
-
-    static TypeOfTransaction intToTypeOfTransaction(int transactionTypeId) {
-        return switch (transactionTypeId) {
-            case 0 -> TypeOfTransaction.INCOME;
-            case 1 -> TypeOfTransaction.OUTCOME;
-            case 2 -> TypeOfTransaction.INTERNAL;
-            default -> throw new InvalidParameterException("Type of Transaction Id must be 0, 1 or 2");
-        };
-    }
 }

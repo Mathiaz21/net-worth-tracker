@@ -1,3 +1,3 @@
 package FunctionalComponents;
 
-public enum TypeOfTransaction { INCOME, OUTCOME, INTERNAL};
+public enum TypeOfTransaction { OUTCOME, INCOME,  INTERNAL};

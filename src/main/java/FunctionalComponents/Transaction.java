@@ -71,9 +71,26 @@ public class Transaction {
 
     public static int transactionTypeToInt(TypeOfTransaction type) {
         return switch (type) {
-            case INCOME -> 0;
-            case OUTCOME -> 1;
+            case OUTCOME -> 0;
+            case INCOME -> 1;
             case INTERNAL -> 2;
+        };
+    }
+
+    public static String transactionTypeToString(TypeOfTransaction type) {
+        return switch (type) {
+            case OUTCOME -> "Outcome";
+            case INCOME -> "Income";
+            case INTERNAL -> "Internal";
+        };
+    }
+
+    public static TypeOfTransaction intToTransactionType(int transactionType) {
+        return switch (transactionType) {
+            case 0 -> TypeOfTransaction.OUTCOME;
+            case 1 -> TypeOfTransaction.INCOME;
+            case 2 -> TypeOfTransaction.INTERNAL;
+            default -> throw new Error("Can only produce a transaction type from 0 to 2");
         };
     }
 

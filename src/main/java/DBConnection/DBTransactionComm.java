@@ -36,7 +36,7 @@ public class DBTransactionComm {
                         rs.getInt("transactionId"),
                         LocalDate.now(),//dateToLocalDate(rs.getDate("transactionDate")), //TODO : Finish the conversion of the timestamp
                         rs.getInt("amountInCents"),
-                        DBUtils.intToTypeOfTransaction(rs.getInt("typeOfTransaction")),
+                        Transaction.intToTransactionType(rs.getInt("typeOfTransaction")),
                         rs.getInt("outcomeAccountId"),
                         rs.getInt("incomeAccountId"),
                         rs.getInt("categoryId"),
