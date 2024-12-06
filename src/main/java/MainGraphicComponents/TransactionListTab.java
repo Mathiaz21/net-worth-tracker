@@ -1,30 +1,22 @@
-package NetWorthTracker;
+package MainGraphicComponents;
 
-import DBConnection.DBTransactionComm;
-import FunctionalComponents.GlobalInfo;
+import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
-import FunctionalComponents.TypeOfTransaction;
-import GraphicComponents.TransactionGraphicItem;
+import SecondaryGraphicComponents.TransactionGraphicItem;
 
 import javax.swing.*;
-import java.awt.*;
-import java.time.LocalDate;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class TransactionListTab extends JPanel {
 
     GlobalInfo globalInfo;
-    Vector<Transaction> transactions;
+    ArrayList<Transaction> transactions;
     public TransactionListTab(GlobalInfo globalInfo) {
 
         this.globalInfo = globalInfo;
-        this.loadAllTransactions();
+        this.transactions = globalInfo.getTransactions();
         this.setUpSwing();
         this.addAllTransactionsItems();
-    }
-
-    public void loadAllTransactions() {
-        this.transactions = DBTransactionComm.getAllTransactions();
     }
 
     private void setUpSwing() {

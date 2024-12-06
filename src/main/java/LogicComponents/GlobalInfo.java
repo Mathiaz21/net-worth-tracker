@@ -1,20 +1,26 @@
-package FunctionalComponents;
+package LogicComponents;
 
 import DBConnection.DBAccountComm;
 import DBConnection.DBCategoryComm;
+import DBConnection.DBTransactionComm;
+import FunctionalComponents.Account;
+import FunctionalComponents.Category;
+import FunctionalComponents.Transaction;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class GlobalInfo {
 
-    private Vector<Account> listOfAccounts;
-    private Vector<Category> listOfOutcomeCategories;
-    private Vector<Category> listOfIncomeCategories;
+    private ArrayList<Account> listOfAccounts;
+    private ArrayList<Category> listOfOutcomeCategories;
+    private ArrayList<Category> listOfIncomeCategories;
+    private ArrayList<Transaction> listOfTransactions;
 
     public GlobalInfo() {
-        this.listOfAccounts = new Vector<>();
-        this.listOfOutcomeCategories = new Vector<>();
-        this.listOfIncomeCategories = new Vector<>();
+        this.listOfAccounts = new ArrayList<>();
+        this.listOfOutcomeCategories = new ArrayList<>();
+        this.listOfIncomeCategories = new ArrayList<>();
+        this.listOfTransactions = new ArrayList<>();
         this.loadGlobalInfoFromDB();
     }
 
@@ -22,17 +28,21 @@ public class GlobalInfo {
         this.listOfAccounts = DBAccountComm.getAccounts();
         this.listOfIncomeCategories = DBCategoryComm.getIncomeCategories();
         this.listOfOutcomeCategories = DBCategoryComm.getOutcomeCategories();
+        this.listOfTransactions = DBTransactionComm.getAllTransactions();
     }
 
 
-    public Vector<Account> getAccounts() {
+    public ArrayList<Account> getAccounts() {
         return listOfAccounts;
     }
-    public Vector<Category> getOutcomeCategories() {
+    public ArrayList<Category> getOutcomeCategories() {
         return listOfOutcomeCategories;
     }
-    public Vector<Category> getIncomeCategories() {
+    public ArrayList<Category> getIncomeCategories() {
         return listOfIncomeCategories;
+    }
+    public ArrayList<Transaction> getTransactions() {
+        return listOfTransactions;
     }
 
 

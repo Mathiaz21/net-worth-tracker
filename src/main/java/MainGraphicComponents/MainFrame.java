@@ -1,6 +1,6 @@
-package NetWorthTracker;
+package MainGraphicComponents;
 
-import FunctionalComponents.GlobalInfo;
+import LogicComponents.GlobalInfo;
 
 import javax.swing.*;
 import java.awt.*;

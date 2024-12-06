@@ -3,13 +3,11 @@ package DBConnection;
 import FunctionalComponents.Transaction;
 import FunctionalComponents.TypeOfTransaction;
 
-import java.security.InvalidParameterException;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Vector;
 
 public class DBUtils {
 

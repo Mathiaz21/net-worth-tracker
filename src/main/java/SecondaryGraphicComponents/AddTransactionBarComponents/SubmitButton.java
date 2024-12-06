@@ -1,4 +1,4 @@
-package GraphicComponents.AddTransactionBarComponents;
+package SecondaryGraphicComponents.AddTransactionBarComponents;
 
 import DBConnection.DBTransactionComm;
 import FunctionalComponents.Transaction;

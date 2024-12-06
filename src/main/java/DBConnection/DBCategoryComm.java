@@ -6,7 +6,7 @@ import FunctionalComponents.TypeOfTransaction;
 import java.security.InvalidParameterException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DBCategoryComm {
 
@@ -14,17 +14,17 @@ public class DBCategoryComm {
     private static final String incomeCategoriesQuery = "SELECT categoryId, categoryName, categoryType FROM categories WHERE categoryType = 'Income'";
     private static final String outcomeCategoriesQuery = "SELECT categoryId, categoryName, categoryType FROM categories WHERE categoryType = 'Outcome'";
 
-    public static Vector<Category> getIncomeCategories() {
+    public static ArrayList<Category> getIncomeCategories() {
         return getCategoriesByType("Income");
     }
 
-    public static Vector<Category> getOutcomeCategories() {
+    public static ArrayList<Category> getOutcomeCategories() {
         return getCategoriesByType("Outcome");
     }
 
 
-    private static Vector<Category> getCategoriesByType(String type) {
-        Vector<Category> categoriesVector = new Vector<>();
+    private static ArrayList<Category> getCategoriesByType(String type) {
+        ArrayList<Category> categoryList = new ArrayList<>();
         if ( !(type.equals("Income") || type.equals("Outcome")) ) {
             throw new InvalidParameterException("Type of Category must be \"Income\" or \"Outcome\"");
         }
@@ -43,13 +43,13 @@ public class DBCategoryComm {
                 int categoryId = rs.getInt("categoryId");
                 String categoryName = rs.getString("categoryName");
                 TypeOfTransaction categoryType = stringToTypeOfTransaction(rs.getString("categoryType"));
-                categoriesVector.add(new Category(categoryId, categoryName, categoryType));
+                categoryList.add(new Category(categoryId, categoryName, categoryType));
             }
         } catch (SQLException e) {
 
             System.err.println(e.getMessage());
         }
-        return categoriesVector;
+        return categoryList;
     }
 
     private static TypeOfTransaction stringToTypeOfTransaction(String typeOfTransactionString) {

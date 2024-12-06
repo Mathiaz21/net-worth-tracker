@@ -1,9 +1,10 @@
-package NetWorthTracker;
+package MainGraphicComponents;
 
 import FunctionalComponents.*;
-import GraphicComponents.AddTransactionBarComponents.AmountTextField;
-import GraphicComponents.AddTransactionBarComponents.DateTextField;
-import GraphicComponents.AddTransactionBarComponents.SubmitButton;
+import SecondaryGraphicComponents.AddTransactionBarComponents.AmountTextField;
+import SecondaryGraphicComponents.AddTransactionBarComponents.DateTextField;
+import SecondaryGraphicComponents.AddTransactionBarComponents.SubmitButton;
+import LogicComponents.GlobalInfo;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.Vector;
+import java.util.ArrayList;
 
 // TODO : SOLVE SYNCHRONISATION PROBLEMS WITH ACCOUNT ID
 
@@ -135,7 +136,7 @@ public class AddTransactionBar extends JPanel {
 
         resetComboBox(this.accountChoiceComboBox);
 
-        Vector<Account> accountList = this.globalInfo.getAccounts();
+        ArrayList<Account> accountList = this.globalInfo.getAccounts();
         for (Account account : accountList) {
             this.accountChoiceComboBox.addItem(account.getName());
         }
@@ -172,7 +173,7 @@ public class AddTransactionBar extends JPanel {
 
     private void setupCategoryComboBox(TypeOfTransaction typeOfTransaction) {
 
-        Vector<Category> categories = switch (typeOfTransaction) {
+        ArrayList<Category> categories = switch (typeOfTransaction) {
             case OUTCOME -> globalInfo.getOutcomeCategories();
             case INCOME -> globalInfo.getIncomeCategories();
             case INTERNAL ->
@@ -194,7 +195,7 @@ public class AddTransactionBar extends JPanel {
 
 
     private void setupSecondAccountComboBox() {
-        Vector<Account> accounts = globalInfo.getAccounts();
+        ArrayList<Account> accounts = globalInfo.getAccounts();
         for (Account account : accounts) {
             this.adaptableComboBox.addItem(account.getName());
         }

@@ -5,7 +5,7 @@ import FunctionalComponents.Transaction;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DBAccountComm {
 
@@ -15,8 +15,8 @@ public class DBAccountComm {
             "UPDATE accounts SET accountName = ?" +
                     " WHERE accountId = ?";
 
-    public static Vector<Account> getAccounts() {
-        Vector<Account> accountVector = new Vector<>();
+    public static ArrayList<Account> getAccounts() {
+        ArrayList<Account> accountList = new ArrayList<>();
 
         try (var conn = DriverManager.getConnection(DBUtils.dbUrl);
              var stmt = conn.createStatement();
@@ -25,13 +25,13 @@ public class DBAccountComm {
 
                 int accountId = rs.getInt("accountId");
                 String accountName = rs.getString("accountName");
-                accountVector.add(new Account(accountId, accountName));
+                accountList.add(new Account(accountId, accountName));
             }
         } catch (SQLException e) {
 
             System.err.println(e.getMessage());
         }
-        return accountVector;
+        return accountList;
     }
 
     public static void insertNewAccount(String accountName) {

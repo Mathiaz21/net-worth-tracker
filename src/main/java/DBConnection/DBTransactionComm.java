@@ -5,7 +5,7 @@ import FunctionalComponents.Transaction;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DBTransactionComm {
 
@@ -24,8 +24,8 @@ public class DBTransactionComm {
                     "transactionDate = ?" +
                     " WHERE transactionId = ?";
 
-    public static Vector<Transaction> getAllTransactions() {
-        Vector<Transaction> transactions = new Vector<>();
+    public static ArrayList<Transaction> getAllTransactions() {
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         try (var conn = DriverManager.getConnection(DBUtils.dbUrl);
              var stmt = conn.createStatement();

@@ -1,11 +1,6 @@
-package NetWorthTracker;
+package MainGraphicComponents;
 
-import DBConnection.DBCategoryComm;
-import DBConnection.DBUtils;
-import FunctionalComponents.Category;
 import com.formdev.flatlaf.FlatDarkLaf;
-
-import java.util.Vector;
 
 public class Main {
 

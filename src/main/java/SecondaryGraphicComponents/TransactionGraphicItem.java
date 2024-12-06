@@ -1,6 +1,6 @@
-package GraphicComponents;
+package SecondaryGraphicComponents;
 
-import FunctionalComponents.GlobalInfo;
+import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 import javax.swing.*;
 import java.awt.*;

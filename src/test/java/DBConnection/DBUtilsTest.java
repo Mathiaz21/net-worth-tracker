@@ -7,8 +7,7 @@ import FunctionalComponents.TypeOfTransaction;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DBUtilsTest {
 
@@ -53,7 +52,7 @@ public class DBUtilsTest {
     @org.junit.Test
     @Test
     public void testGetAllTransactions(){
-        List<Transaction> transactions = DBTransactionComm.getAllTransactions();
+        ArrayList<Transaction> transactions = DBTransactionComm.getAllTransactions();
         for(Transaction transaction : transactions){
             transaction.print();
         }
@@ -62,14 +61,14 @@ public class DBUtilsTest {
     @org.junit.Test
     @Test
     public void testGetCategories() {
-        Vector<Category> categories = DBCategoryComm.getIncomeCategories();
+        ArrayList<Category> categories = DBCategoryComm.getIncomeCategories();
         for(Category category : categories){ category.print(); }
     }
 
     @org.junit.Test
     @Test
     public void testGetAccounts() {
-        Vector<Account> accounts = DBAccountComm.getAccounts();
+        ArrayList<Account> accounts = DBAccountComm.getAccounts();
         for(Account account : accounts){
             account.print();
         }
