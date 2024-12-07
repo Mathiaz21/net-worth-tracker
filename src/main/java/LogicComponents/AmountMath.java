@@ -2,6 +2,8 @@ package LogicComponents;
 
 import FunctionalComponents.Transaction;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -37,10 +39,56 @@ public class AmountMath {
             orderTransactionByDate();
         int currentBalance = 0;
         for (Transaction t : transactions)
-            switch (t.getType()) {
-                case OUTCOME -> currentBalance -= t.getAmountInCents();
-                case INCOME -> currentBalance += t.getAmountInCents();
-            }
+            currentBalance += getTransactionAmount(t);
         return currentBalance;
+    }
+
+    public ArrayList<Integer> getDailyBalancesBetweenDates(LocalDate startDate, LocalDate endDate) {
+
+        ArrayList<Integer> balanceList = new ArrayList<>();
+        int balance = 0;
+        if (this.transactions.isEmpty()) {
+            long days = ChronoUnit.DAYS.between(startDate, endDate);
+            for (int i = 0; i < days; i++)
+                balanceList.add(balance);
+            return balanceList;
+        }
+
+        LocalDate balanceDateCursor = startDate;
+        int transactionCursor = 0;
+        while ( endDate.isAfter(balanceDateCursor) ){
+
+            while ( areTransactionsToProcess(this.transactions, transactionCursor, balanceDateCursor) ) {
+                balance += getTransactionAmount( transactions.get(transactionCursor) );
+                transactionCursor++;
+            }
+            balanceList.add(balance);
+            balanceDateCursor = balanceDateCursor.plusDays(1);
+        }
+        return balanceList;
+    }
+
+
+    public static int getTransactionAmount(Transaction t) {
+        int amount = 0;
+        switch (t.getType()) {
+            case OUTCOME -> amount -= t.getAmountInCents();
+            case INCOME -> amount += t.getAmountInCents();
+        }
+        return amount;
+    }
+
+    private static LocalDate earliestDate(LocalDate d1, LocalDate d2) {
+        if (d1.isBefore(d2))
+            return d1;
+        return d2;
+    }
+
+    private static boolean areTransactionsToProcess(ArrayList<Transaction> transactions, int transactionCursor, LocalDate balanceDateCursor) {
+        if (transactionCursor >= transactions.size())
+            return false;
+        if (transactions.get(transactionCursor).getDate() .isAfter(balanceDateCursor))
+            return false;
+        return true;
     }
 }

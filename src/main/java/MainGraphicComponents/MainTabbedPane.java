@@ -12,12 +12,14 @@ public class MainTabbedPane extends JTabbedPane {
         
         super();
         this.globalInfo = globalInfo;
-        JPanel overviewTab = new OverviewTab();
+        JPanel overviewTab = new OverviewTab(globalInfo);
         JPanel transactionListTab = new TransactionListTab(globalInfo);
         JPanel statsTab = new JPanel();
         statsTab.add(new JLabel("TODO : Stats tab"));
         JPanel accountNCategoryTab = new JPanel();
         accountNCategoryTab.add(new JLabel("TODO : Account N Category Tab"));
+
+        
 
         this.add("Overview", overviewTab);
         this.add("Transaction List", transactionListTab);

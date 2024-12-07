@@ -2,6 +2,7 @@ package DBConnection;
 
 import FunctionalComponents.Transaction;
 
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -31,10 +32,12 @@ public class DBTransactionComm {
              var stmt = conn.createStatement();
              var rs = stmt.executeQuery(allTransactionsQuery)) {
             while (rs.next()) {
+                String transactionDateRaw = rs.getString("transactionDate");
+                LocalDate transactionDate = LocalDate.parse(transactionDateRaw);
                 Transaction newTransaction = new Transaction(
 
                         rs.getInt("transactionId"),
-                        LocalDate.now(),//dateToLocalDate(rs.getDate("transactionDate")), //TODO : Finish the conversion of the timestamp
+                        transactionDate,
                         rs.getInt("amountInCents"),
                         Transaction.intToTransactionType(rs.getInt("typeOfTransaction")),
                         rs.getInt("outcomeAccountId"),
@@ -45,8 +48,11 @@ public class DBTransactionComm {
                 transactions.add(newTransaction);
             }
         } catch (SQLException e) {
-
-            System.err.println(e.getMessage());
+            System.err.println("SQL Error occurred while fetching transactions:");
+            System.err.println("Error Code: " + e.getErrorCode()); // SQL error code
+            System.err.println("SQL State: " + e.getSQLState());   // SQL state
+            System.err.println("Message: " + e.getMessage());      // SQL error message
+            e.printStackTrace(); // Print the stack trace for detailed debugging
         }
         return transactions;
     }

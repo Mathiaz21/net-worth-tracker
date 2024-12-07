@@ -1,5 +1,6 @@
 package MainGraphicComponents;
 
+import LogicComponents.GlobalInfo;
 import SecondaryGraphicComponents.QuarterPanels.BalanceCurvePanel;
 import SecondaryGraphicComponents.QuadPanel;
 import SecondaryGraphicComponents.QuarterPanels.MonthlyBarsPanel;
@@ -9,18 +10,21 @@ import SecondaryGraphicComponents.QuarterPanels.TransactionModificationPanel;
 import javax.swing.*;
 
 public class OverviewTab extends JPanel {
+    GlobalInfo globalInfo;
     QuadPanel overviewQuadPanel;
     JPanel[] overviewPanels;
 
-    public OverviewTab() {
+    public OverviewTab(GlobalInfo globalInfo) {
+        this.globalInfo = globalInfo;
         this.setupOverviewPanels();
         this.overviewQuadPanel = new QuadPanel(overviewPanels);
+        this.add(this.overviewQuadPanel);
     }
 
     private void setupOverviewPanels() {
 
         overviewPanels = new JPanel[4];
-        overviewPanels[0] = new BalanceCurvePanel();
+        overviewPanels[0] = new BalanceCurvePanel(globalInfo);
         overviewPanels[1] = new TransactionListQuarter();
         overviewPanels[2] = new MonthlyBarsPanel();
         overviewPanels[3] = new TransactionModificationPanel();
