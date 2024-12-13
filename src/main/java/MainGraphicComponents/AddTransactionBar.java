@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-// TODO : SOLVE SYNCHRONISATION PROBLEMS WITH ACCOUNT ID
 
 public class AddTransactionBar extends JPanel {
 
@@ -76,7 +75,7 @@ public class AddTransactionBar extends JPanel {
         this.accountChoiceComboBox = new JComboBox();
         this.adaptableComboBox = new JComboBox();
         this.descriptionField = new JTextField("");
-        this.submitButton = new SubmitButton(this.localTransaction);
+        this.submitButton = new SubmitButton(this.localTransaction, this.globalInfo, this);
 
         this.add(this.amountTextField, this.constraints);
         this.constraints.gridx = 1;
@@ -214,5 +213,11 @@ public class AddTransactionBar extends JPanel {
         for (ActionListener actionListener : actionListeners)
             comboBox.removeActionListener(actionListener);
         comboBox.removeAllItems();
+    }
+
+    public void resetTextFields() {
+        this.amountTextField.reset();
+        this.dateField.reset();
+        this.descriptionField.setText("");
     }
 }

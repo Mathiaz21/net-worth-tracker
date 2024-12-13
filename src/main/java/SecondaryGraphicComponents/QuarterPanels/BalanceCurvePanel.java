@@ -1,8 +1,7 @@
 package SecondaryGraphicComponents.QuarterPanels;
 
 import LogicComponents.GlobalInfo;
-import LogicComponents.AmountMath;
-import org.knowm.xchart.SwingWrapper;
+import LogicComponents.TransactionsLogic;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.QuickChart;
@@ -17,11 +16,11 @@ public class BalanceCurvePanel extends JPanel {
     ArrayList<Integer> last90DaysBalanceCents;
     double[] last90DaysBalanceEuros;
     double[] range90;
-    AmountMath amountMath;
+    TransactionsLogic amountMath;
 
     public BalanceCurvePanel(GlobalInfo globalInfo) {
 
-        this.amountMath = new AmountMath(globalInfo);
+        this.amountMath = new TransactionsLogic(globalInfo.getTransactions());
         LocalDate today = LocalDate.now();
         last90DaysBalanceCents = amountMath.getDailyBalancesBetweenDates(today.minusDays(90), today);
         range90 = new double[90];

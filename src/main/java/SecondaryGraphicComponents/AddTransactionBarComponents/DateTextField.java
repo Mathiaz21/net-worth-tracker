@@ -42,6 +42,11 @@ public class DateTextField extends JTextField {
     }
 
 
+    public void reset() {
+        this.setText("");
+    }
+
+
     static class TextFieldExtraction{
 
         LocalDate date;

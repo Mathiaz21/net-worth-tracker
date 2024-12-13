@@ -68,4 +68,10 @@ public class GlobalInfo {
         String ExceptionString = String.format("Category %d does not exist", index);
         throw new IndexOutOfBoundsException(ExceptionString);
     }
+
+
+    public void addSyncedTransaction(Transaction transaction) {
+        this.listOfTransactions.add(new Transaction(transaction));
+        DBTransactionComm.addTransactionInDB(transaction);
+    }
 }

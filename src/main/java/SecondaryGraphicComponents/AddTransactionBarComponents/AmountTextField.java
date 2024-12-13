@@ -39,6 +39,10 @@ public class AmountTextField extends JTextField {
     }
 
 
+    public void reset() {
+        this.setText("");
+    }
+
     class TextFieldExtraction{
 
         int amount;

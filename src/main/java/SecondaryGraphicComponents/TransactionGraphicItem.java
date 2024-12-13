@@ -50,20 +50,28 @@ public class TransactionGraphicItem extends JPanel {
         this.amountLabel = new JLabel(this.transaction.getAmountInCents() + "");
         this.typeLabel = new JLabel(this.transaction.getType().toString());
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
-        final int accountId = this.transaction.getOutcomeAccountId();
-        this.primaryAccountLabel = new JLabel( globalInfo.accountIndexToName(accountId) );
+        int accountId = 0;
+        int categoryId;
 
         switch (this.transaction.getType()) {
             case OUTCOME:
+                accountId = this.transaction.getOutcomeAccountId();
+                categoryId = this.transaction.getCategoryId();
+                this.multifunctionLabel = new JLabel( globalInfo.categoryIndexToName(categoryId) );
+                break;
             case INCOME:
-                final int categoryId = this.transaction.getCategoryId();
+                accountId = this.transaction.getIncomeAccountId();
+                categoryId = this.transaction.getCategoryId();
                 this.multifunctionLabel = new JLabel( globalInfo.categoryIndexToName(categoryId) );
                 break;
             case INTERNAL:
+                accountId = this.transaction.getOutcomeAccountId();
                 final int accountId2 = this.transaction.getIncomeAccountId();
                 this.multifunctionLabel = new JLabel(globalInfo.accountIndexToName(accountId2));
                 break;
         }
+
+        this.primaryAccountLabel = new JLabel( globalInfo.accountIndexToName(accountId) );
     }
 
 

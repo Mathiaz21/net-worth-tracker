@@ -51,6 +51,17 @@ public class Transaction {
         this.description = description;
     }
 
+    public Transaction(Transaction transaction) { //TODO: Verify deepcopy is effective
+        this(transaction.transactionID,
+                transaction.getDate(),
+                transaction.getAmountInCents(),
+                transaction.getType(),
+                transaction.getOutcomeAccountId(),
+                transaction.getIncomeAccountId(),
+                transaction.categoryId,
+                transaction.getDescription());
+    }
+
     public int getTransactionID() { return transactionID; }
     public LocalDate getDate() { return date; }
     public int getAmountInCents() { return amountInCents; }
