@@ -2,17 +2,26 @@ package SecondaryGraphicComponents;
 
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
+import MainGraphicComponents.TransactionListTab;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TransactionGraphicItem extends JPanel {
 
     GlobalInfo globalInfo;
-
     Transaction transaction;
+    int itemIndex;
+    TransactionListTab parentTab;
 
     GridBagLayout layout;
     GridBagConstraints constraints;
+
+    Color selectedBackground = new Color(100, 160, 240, 64);
 
     JLabel dateLabel;
     JLabel amountLabel;
@@ -21,12 +30,23 @@ public class TransactionGraphicItem extends JPanel {
     JLabel multifunctionLabel;
     JLabel descriptionLabel;
 
-    public TransactionGraphicItem(Transaction transaction, GlobalInfo globalInfo) {
-        this.transaction = transaction;
+    public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionListTab parentTab) {
+        this.transaction = globalInfo.getTransactions().get(itemIndex);
         this.globalInfo = globalInfo;
+        this.itemIndex = itemIndex;
+        this.parentTab = parentTab;
         this.setupSwing();
-
+        makeSelectable();
     }
+
+    public void updateSelectedState() {
+        if (this.globalInfo.indexIsSelected(this.itemIndex))
+            this.setBackground(this.selectedBackground);
+        else
+            this.setBackground(null);
+        this.revalidate();
+    }
+
 
     private void setupSwing() {
         this.setLabels();
@@ -88,4 +108,19 @@ public class TransactionGraphicItem extends JPanel {
         this.constraints.gridx = 5;
         this.add(descriptionLabel, this.constraints);
     }
+
+    private void makeSelectable() {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.isShiftDown())
+                    globalInfo.selectRangeOfItems(itemIndex);
+                else
+                    globalInfo.selectOneItem(itemIndex);
+                parentTab.updateSelectedStates();
+            }
+        });
+
+    }
+
 }

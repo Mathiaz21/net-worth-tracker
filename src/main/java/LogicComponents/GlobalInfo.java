@@ -7,6 +7,7 @@ import FunctionalComponents.Account;
 import FunctionalComponents.Category;
 import FunctionalComponents.Transaction;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 public class GlobalInfo {
@@ -15,6 +16,8 @@ public class GlobalInfo {
     private ArrayList<Category> listOfOutcomeCategories;
     private ArrayList<Category> listOfIncomeCategories;
     private ArrayList<Transaction> listOfTransactions;
+    private int selectedMinIndex;
+    private int selectedMaxIndex;
 
     public GlobalInfo() {
         this.listOfAccounts = new ArrayList<>();
@@ -44,7 +47,11 @@ public class GlobalInfo {
     public ArrayList<Transaction> getTransactions() {
         return listOfTransactions;
     }
-
+    public int getSelectedMinIndex() { return selectedMinIndex; }
+    public int getSelectedMaxIndex() { return selectedMaxIndex; }
+    public boolean indexIsSelected(int index) {
+        return this.selectedMinIndex <= index && this.selectedMaxIndex >= index;
+    }
 
     public String accountIndexToName(int index) {
 
@@ -74,4 +81,28 @@ public class GlobalInfo {
         this.listOfTransactions.add(new Transaction(transaction));
         DBTransactionComm.addTransactionInDB(transaction);
     }
+
+    public void selectOneItem(int selectedIndex) {
+        if(selectedIndex < 0 || selectedIndex > this.listOfTransactions.size())
+            throw new InvalidParameterException("Selected index out of bounds");
+        if(this.selectedMinIndex == selectedIndex && this.selectedMaxIndex == selectedIndex){
+            this.selectedMinIndex = -1;
+            this.selectedMaxIndex = -1;
+            return;
+        }
+        this.selectedMinIndex = selectedIndex;
+        this.selectedMaxIndex = selectedIndex;
+    }
+
+    public void selectRangeOfItems(int newIndex) {
+        if(this.selectedMaxIndex == -1){
+            selectedMinIndex = newIndex;
+            return;
+        }
+        if (newIndex < this.selectedMinIndex)
+            this.selectedMinIndex = newIndex;
+        if (newIndex > this.selectedMaxIndex)
+            this.selectedMaxIndex = newIndex;
+    }
+
 }

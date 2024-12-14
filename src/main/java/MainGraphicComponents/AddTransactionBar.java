@@ -217,6 +217,7 @@ public class AddTransactionBar extends JPanel {
 
     public void resetTextFields() {
         this.amountTextField.reset();
+        this.amountTextField.requestFocus();
         this.dateField.reset();
         this.descriptionField.setText("");
     }

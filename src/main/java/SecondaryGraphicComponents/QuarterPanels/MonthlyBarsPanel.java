@@ -10,6 +10,7 @@ import org.knowm.xchart.XChartPanel;
 
 import javax.swing.*;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -31,12 +32,12 @@ public class MonthlyBarsPanel extends JPanel {
     private CategoryChart getChart() {
 
         CategoryChart chart = new CategoryChartBuilder().width(600).height(400).title("Monthly Globals").xAxisTitle("Month").yAxisTitle("Amount").build();
-        Collection<Float> positiveCollection = new HashSet<Float>(this.posNegTotals.positiveTotal);
-        Collection<Float> negativeCollection = new HashSet<Float>(this.posNegTotals.negativeTotal);
-        Histogram incomeHistogram = new Histogram(positiveCollection, 20);
-        Histogram outcomeHistogram = new Histogram(negativeCollection, 20);
-        chart.addSeries("Income", incomeHistogram.getxAxisData(), incomeHistogram.getyAxisData());
-        chart.addSeries("Outcome", outcomeHistogram.getxAxisData(), outcomeHistogram.getyAxisData());
+        ArrayList<String> emptyLabels = new ArrayList<>();
+        for(int i = 0; i  <this.posNegTotals.labels.size(); i++)
+            emptyLabels.add("");
+        chart.getStyler().setOverlapped(true);
+        chart.addSeries("Income", this.posNegTotals.labels, this.posNegTotals.positiveTotal);
+        chart.addSeries("Outcome", emptyLabels, this.posNegTotals.negativeTotal);
         return chart;
     }
 }

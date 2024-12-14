@@ -12,6 +12,7 @@ public class TransactionListTab extends JPanel {
 
     GlobalInfo globalInfo;
     ArrayList<Transaction> transactions;
+    ArrayList<TransactionGraphicItem> transactionGraphicItems;
     TransactionsLogic transactionsLogic;
     JButton refreshButton;
 
@@ -20,6 +21,7 @@ public class TransactionListTab extends JPanel {
         this.globalInfo = globalInfo;
         this.transactions = globalInfo.getTransactions();
         transactionsLogic = new TransactionsLogic(transactions);
+        this.transactionGraphicItems = new ArrayList<TransactionGraphicItem>();
         this.setUpSwing();
         this.refreshButton = new JButton("Refresh");
         this.refreshButton.addActionListener(e -> this.refresh());
@@ -31,8 +33,10 @@ public class TransactionListTab extends JPanel {
     }
 
     private void addGraphicItems() {
-        for (Transaction transaction : transactions) {
-            this.add(new TransactionGraphicItem(transaction, globalInfo));
+        for (int i = 0; i < transactions.size(); i++) {
+            TransactionGraphicItem item = new TransactionGraphicItem(this.globalInfo, i, this);
+            this.transactionGraphicItems.add(item);
+            this.add(item);
         }
         this.add(refreshButton);
     }
@@ -42,5 +46,10 @@ public class TransactionListTab extends JPanel {
         transactionsLogic.orderTransactionByDate();
         this.addGraphicItems();
         this.revalidate();
+    }
+
+    public void updateSelectedStates() {
+        for (TransactionGraphicItem item : transactionGraphicItems)
+            item.updateSelectedState();
     }
 }

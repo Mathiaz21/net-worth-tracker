@@ -147,6 +147,6 @@ public class TransactionsLogic {
             case NOVEMBER -> label = "Nov";
             case DECEMBER -> label = "Dec";
         }
-        return label + yearMonth.getYear();
+        return label;
     }
 }
