@@ -2,6 +2,7 @@ package SecondaryGraphicComponents;
 
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
+import MainGraphicComponents.TransactionList;
 import MainGraphicComponents.TransactionListTab;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class TransactionGraphicItem extends JPanel {
     GlobalInfo globalInfo;
     Transaction transaction;
     int itemIndex;
-    TransactionListTab parentTab;
+    TransactionList parentTab;
 
     GridBagLayout layout;
     GridBagConstraints constraints;
@@ -30,7 +31,7 @@ public class TransactionGraphicItem extends JPanel {
     JLabel multifunctionLabel;
     JLabel descriptionLabel;
 
-    public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionListTab parentTab) {
+    public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionList parentTab) {
         this.transaction = globalInfo.getTransactions().get(itemIndex);
         this.globalInfo = globalInfo;
         this.itemIndex = itemIndex;

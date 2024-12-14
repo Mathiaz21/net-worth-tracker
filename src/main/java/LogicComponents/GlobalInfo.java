@@ -109,4 +109,12 @@ public class GlobalInfo {
     public void refreshTransactionsFromDB() {
         this.listOfTransactions = DBTransactionComm.getAllTransactions();
     }
+
+    public int getTotalInitialAmount() {
+        int initialAmount = 0;
+        for (Account account: this.getAccounts())
+            initialAmount += account.getInitialAmount();
+        return initialAmount;
+    }
+
 }

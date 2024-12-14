@@ -21,8 +21,8 @@ public class BalanceCurvePanel extends JPanel {
     public BalanceCurvePanel(GlobalInfo globalInfo) {
 
         this.amountMath = new TransactionsLogic(globalInfo.getTransactions());
-        LocalDate today = LocalDate.now();
-        last90DaysBalanceCents = amountMath.getDailyBalancesBetweenDates(today.minusDays(90), today);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        last90DaysBalanceCents = amountMath.getDailyBalancesBetweenDates(tomorrow.minusDays(90), tomorrow, globalInfo);
         range90 = new double[90];
         last90DaysBalanceEuros = new double[90];
         for(int i = 0; i < 90; i++) {

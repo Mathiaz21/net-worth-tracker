@@ -1,5 +1,6 @@
 package LogicComponents;
 
+import FunctionalComponents.Account;
 import FunctionalComponents.Transaction;
 
 import java.time.LocalDate;
@@ -43,10 +44,10 @@ public class TransactionsLogic {
         return currentBalance;
     }
 
-    public ArrayList<Integer> getDailyBalancesBetweenDates(LocalDate startDate, LocalDate endDate) {
+    public ArrayList<Integer> getDailyBalancesBetweenDates(LocalDate startDate, LocalDate endDate, GlobalInfo globalInfo) {
 
         ArrayList<Integer> balanceList = new ArrayList<>();
-        int balance = 0;
+        int balance = globalInfo.getTotalInitialAmount();
         if (this.transactions.isEmpty()) {
             long days = ChronoUnit.DAYS.between(startDate, endDate);
             for (int i = 0; i < days; i++)
@@ -56,7 +57,8 @@ public class TransactionsLogic {
 
         LocalDate balanceDateCursor = startDate;
         int transactionCursor = 0;
-        while ( endDate.isAfter(balanceDateCursor) ){
+        this.orderTransactionByDate();
+        while ( balanceDateCursor.isBefore(endDate.plusDays(1)) ) {
 
             while ( areTransactionsToProcess(this.transactions, transactionCursor, balanceDateCursor) ) {
                 balance += getTransactionAmount( transactions.get(transactionCursor) );
@@ -104,9 +106,8 @@ public class TransactionsLogic {
         if (transactionCursor >= this.transactions.size())
             return false;
         return this.transactions.get(transactionCursor).getDate().getMonth().equals(monthlyCursor.getMonth());
-
-
     }
+
 
     public static int getTransactionAmount(Transaction t) {
         int amount = 0;
@@ -126,7 +127,7 @@ public class TransactionsLogic {
     private static boolean areTransactionsToProcess(ArrayList<Transaction> transactions, int transactionCursor, LocalDate balanceDateCursor) {
         if (transactionCursor >= transactions.size())
             return false;
-        if (transactions.get(transactionCursor).getDate() .isAfter(balanceDateCursor))
+        if (balanceDateCursor.isBefore(transactions.get(transactionCursor).getDate()))
             return false;
         return true;
     }

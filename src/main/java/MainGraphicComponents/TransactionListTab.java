@@ -9,7 +9,7 @@ import SecondaryGraphicComponents.TransactionGraphicItem;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class TransactionListTab extends JPanel {
+public class TransactionListTab extends JPanel implements TransactionList{
 
     GlobalInfo globalInfo;
     ArrayList<TransactionGraphicItem> transactionGraphicItems;
