@@ -105,4 +105,8 @@ public class GlobalInfo {
             this.selectedMaxIndex = newIndex;
     }
 
+
+    public void refreshTransactionsFromDB() {
+        this.listOfTransactions = DBTransactionComm.getAllTransactions();
+    }
 }
