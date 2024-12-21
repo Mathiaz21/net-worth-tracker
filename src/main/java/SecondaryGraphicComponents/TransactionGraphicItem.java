@@ -2,7 +2,6 @@ package SecondaryGraphicComponents;
 
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
-import MainGraphicComponents.TransactionList;
 import MainGraphicComponents.TransactionListTab;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ public class TransactionGraphicItem extends JPanel {
     GlobalInfo globalInfo;
     Transaction transaction;
     int itemIndex;
-    TransactionList parentTab;
+    TransactionListPanel parentTab;
 
     GridBagLayout layout;
     GridBagConstraints constraints;
@@ -31,7 +30,7 @@ public class TransactionGraphicItem extends JPanel {
     JLabel multifunctionLabel;
     JLabel descriptionLabel;
 
-    public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionList parentTab) {
+    public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionListPanel parentTab) {
         this.transaction = globalInfo.getTransactions().get(itemIndex);
         this.globalInfo = globalInfo;
         this.itemIndex = itemIndex;
@@ -97,16 +96,27 @@ public class TransactionGraphicItem extends JPanel {
 
 
     private void placeLabels() {
+        this.constraints.weightx = .1;
         this.add(dateLabel, this.constraints);
+
         this.constraints.gridx = 1;
+        this.constraints.weightx = .1;
         this.add(amountLabel, this.constraints);
+
         this.constraints.gridx = 2;
+        this.constraints.weightx = .1;
         this.add(typeLabel, this.constraints);
+
         this.constraints.gridx = 3;
+        this.constraints.weightx = .1;
         this.add(primaryAccountLabel, this.constraints);
+
         this.constraints.gridx = 4;
+        this.constraints.weightx = .1;
         this.add(multifunctionLabel, this.constraints);
+
         this.constraints.gridx = 5;
+        this.constraints.weightx = .5;
         this.add(descriptionLabel, this.constraints);
     }
 
