@@ -2,12 +2,9 @@ package SecondaryGraphicComponents;
 
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
-import MainGraphicComponents.TransactionListTab;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -49,6 +46,7 @@ public class TransactionGraphicItem extends JPanel {
 
 
     private void setupSwing() {
+        this.setPreferredSize(new Dimension(100, 50));
         this.setLabels();
         this.setupGridBag();
         this.placeLabels();
@@ -59,15 +57,16 @@ public class TransactionGraphicItem extends JPanel {
         this.setLayout(this.layout);
 
         this.constraints = new GridBagConstraints();
+        this.constraints.anchor = GridBagConstraints.CENTER;
         this.constraints.gridx = 0;
         this.constraints.gridy = 0;
-        this.constraints.insets = new Insets(0, 15, 0, 15);
     }
 
     private void setLabels() {
 
         this.dateLabel = new JLabel(this.transaction.getDate().toString());
-        this.amountLabel = new JLabel(this.transaction.getAmountInCents() + "");
+        String amountString = printReadableAmount(this.transaction.getAmountInCents());
+        this.amountLabel = new JLabel(amountString);
         this.typeLabel = new JLabel(this.transaction.getType().toString());
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
         int accountId = 0;
@@ -92,32 +91,37 @@ public class TransactionGraphicItem extends JPanel {
         }
 
         this.primaryAccountLabel = new JLabel( globalInfo.accountIndexToName(accountId) );
+        this.setPrefSizes();
     }
 
 
     private void placeLabels() {
-        this.constraints.weightx = .1;
         this.add(dateLabel, this.constraints);
-
         this.constraints.gridx = 1;
-        this.constraints.weightx = .1;
         this.add(amountLabel, this.constraints);
-
         this.constraints.gridx = 2;
-        this.constraints.weightx = .1;
         this.add(typeLabel, this.constraints);
-
         this.constraints.gridx = 3;
-        this.constraints.weightx = .1;
         this.add(primaryAccountLabel, this.constraints);
-
         this.constraints.gridx = 4;
-        this.constraints.weightx = .1;
         this.add(multifunctionLabel, this.constraints);
-
         this.constraints.gridx = 5;
-        this.constraints.weightx = .5;
         this.add(descriptionLabel, this.constraints);
+    }
+
+    private void setPrefSizes() {
+        Dimension littleLabelDimension = new Dimension(150,30);
+        Dimension descriptionLabelDimension = new Dimension(200,30);
+        this.dateLabel.setPreferredSize(littleLabelDimension);
+        this.amountLabel.setPreferredSize(littleLabelDimension);
+        this.typeLabel.setPreferredSize(littleLabelDimension);
+        this.primaryAccountLabel.setPreferredSize(littleLabelDimension);
+        this.multifunctionLabel.setPreferredSize(littleLabelDimension);
+        this.descriptionLabel.setPreferredSize(descriptionLabelDimension);
+    }
+
+    private String printReadableAmount(int amountInCents) {
+        return amountInCents/100 + "." + amountInCents%100;
     }
 
     private void makeSelectable() {
