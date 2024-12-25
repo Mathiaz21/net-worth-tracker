@@ -1,28 +1,27 @@
 package SecondaryGraphicComponents.QuarterPanels;
 
+import CommonConstants.ColorConstants;
 import LogicComponents.GlobalInfo;
 import LogicComponents.PosNegTotals;
-import LogicComponents.TransactionsLogic;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.Histogram;
 import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYChart;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+
+import static MainGraphicComponents.ChartMethods.purifyCategoryChart;
 
 public class MonthlyBarsPanel extends JPanel {
 
     GlobalInfo globalInfo;
-    TransactionsLogic transactionsLogic;
     PosNegTotals posNegTotals;
     public MonthlyBarsPanel(GlobalInfo globalInfo) {
         this.globalInfo = globalInfo;
-        this.transactionsLogic = new TransactionsLogic(this.globalInfo.getTransactions());
-        this.posNegTotals = transactionsLogic.deriveMonthlyPosNegTotals(YearMonth.now().minusMonths(11), YearMonth.now());
+        this.posNegTotals = globalInfo.transactionsHandler.deriveMonthlyPosNegTotals(YearMonth.now().minusMonths(11), YearMonth.now());
 
         CategoryChart monthlyBarChart = getChart();
         JPanel histogramPanel = new XChartPanel(monthlyBarChart);
@@ -36,8 +35,16 @@ public class MonthlyBarsPanel extends JPanel {
         for(int i = 0; i  <this.posNegTotals.labels.size(); i++)
             emptyLabels.add("");
         chart.getStyler().setOverlapped(true);
+        purifyCategoryChart(chart);
+        setChartColors(chart);
         chart.addSeries("Income", this.posNegTotals.labels, this.posNegTotals.positiveTotal);
         chart.addSeries("Outcome", emptyLabels, this.posNegTotals.negativeTotal);
         return chart;
+    }
+
+    private static void setChartColors(CategoryChart chart) {
+        chart.getStyler().setChartFontColor(Color.lightGray);
+        Color[] barColors = new Color[] {ColorConstants.incomeColor, ColorConstants.outcomeColor};
+        chart.getStyler().setSeriesColors(barColors);
     }
 }

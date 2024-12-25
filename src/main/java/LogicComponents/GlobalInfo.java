@@ -15,15 +15,13 @@ public class GlobalInfo {
     private ArrayList<Account> listOfAccounts;
     private ArrayList<Category> listOfOutcomeCategories;
     private ArrayList<Category> listOfIncomeCategories;
-    private ArrayList<Transaction> listOfTransactions;
-    private int selectedMinIndex;
-    private int selectedMaxIndex;
+    public TransactionsHandler transactionsHandler;
 
     public GlobalInfo() {
         this.listOfAccounts = new ArrayList<>();
         this.listOfOutcomeCategories = new ArrayList<>();
         this.listOfIncomeCategories = new ArrayList<>();
-        this.listOfTransactions = new ArrayList<>();
+        this.transactionsHandler = new TransactionsHandler();
         this.loadGlobalInfoFromDB();
     }
 
@@ -31,7 +29,6 @@ public class GlobalInfo {
         this.listOfAccounts = DBAccountComm.getAccounts();
         this.listOfIncomeCategories = DBCategoryComm.getIncomeCategories();
         this.listOfOutcomeCategories = DBCategoryComm.getOutcomeCategories();
-        this.listOfTransactions = DBTransactionComm.getAllTransactions();
     }
 
 
@@ -45,12 +42,7 @@ public class GlobalInfo {
         return listOfIncomeCategories;
     }
     public ArrayList<Transaction> getTransactions() {
-        return listOfTransactions;
-    }
-    public int getSelectedMinIndex() { return selectedMinIndex; }
-    public int getSelectedMaxIndex() { return selectedMaxIndex; }
-    public boolean indexIsSelected(int index) {
-        return this.selectedMinIndex <= index && this.selectedMaxIndex >= index;
+        return this.transactionsHandler.listOfTransactions;
     }
 
     public String accountIndexToName(int index) {
@@ -75,39 +67,15 @@ public class GlobalInfo {
         String ExceptionString = String.format("Category %d does not exist", index);
         throw new IndexOutOfBoundsException(ExceptionString);
     }
-
-
     public void addSyncedTransaction(Transaction transaction) {
-        this.listOfTransactions.add(new Transaction(transaction));
-        DBTransactionComm.addTransactionInDB(transaction);
+        this.transactionsHandler.addSyncedTransaction(transaction);
     }
 
-    public void selectOneItem(int selectedIndex) {
-        if(selectedIndex < 0 || selectedIndex > this.listOfTransactions.size())
-            throw new InvalidParameterException("Selected index out of bounds");
-        if(this.selectedMinIndex == selectedIndex && this.selectedMaxIndex == selectedIndex){
-            this.selectedMinIndex = -1;
-            this.selectedMaxIndex = -1;
-            return;
-        }
-        this.selectedMinIndex = selectedIndex;
-        this.selectedMaxIndex = selectedIndex;
-    }
 
-    public void selectRangeOfItems(int newIndex) {
-        if(this.selectedMaxIndex == -1){
-            selectedMinIndex = newIndex;
-            return;
-        }
-        if (newIndex < this.selectedMinIndex)
-            this.selectedMinIndex = newIndex;
-        if (newIndex > this.selectedMaxIndex)
-            this.selectedMaxIndex = newIndex;
-    }
 
 
     public void refreshTransactionsFromDB() {
-        this.listOfTransactions = DBTransactionComm.getAllTransactions();
+        this.transactionsHandler.refreshTransactionsFromDB();
     }
 
     public int getTotalInitialAmount() {

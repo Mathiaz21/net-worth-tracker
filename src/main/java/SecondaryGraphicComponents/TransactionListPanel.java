@@ -2,19 +2,17 @@ package SecondaryGraphicComponents;
 
 import DBConnection.DBTransactionComm;
 import LogicComponents.GlobalInfo;
-import LogicComponents.TransactionsLogic;
+import LogicComponents.TransactionsHandler;
 
 import javax.swing.*;
 import java.util.ArrayList;
 public class TransactionListPanel extends JPanel {
     GlobalInfo globalInfo;
     ArrayList<TransactionGraphicItem> transactionGraphicItems;
-    TransactionsLogic transactionsLogic;
 
-    public TransactionListPanel(GlobalInfo globalInfo, TransactionsLogic transactionsLogic) {
+    public TransactionListPanel(GlobalInfo globalInfo) {
         super();
         this.globalInfo = globalInfo;
-        this.transactionsLogic = transactionsLogic;
         transactionGraphicItems = new ArrayList<>();
         int nbTransactions = this.globalInfo.getTransactions().size();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -31,14 +29,15 @@ public class TransactionListPanel extends JPanel {
 
     public void localRefresh() {
         this.removeAll();
-        transactionsLogic.orderTransactionByDate();
+        this.transactionGraphicItems = new ArrayList<>();
+        globalInfo.transactionsHandler.orderTransactionByDate();
         this.addGraphicItems();
         this.revalidate();
     }
 
     public void deleteSelected() {
-        int startIndex = this.globalInfo.getSelectedMinIndex();
-        int endIndex = this.globalInfo.getSelectedMaxIndex();
+        int startIndex = this.globalInfo.transactionsHandler.getSelectedMinIndex();
+        int endIndex = this.globalInfo.transactionsHandler.getSelectedMaxIndex();
         for (int i = startIndex; i <= endIndex; i++) {
             int transactionId = globalInfo.getTransactions().get(i).getTransactionID();
             DBTransactionComm.deleteTransactionById(transactionId);

@@ -1,7 +1,6 @@
 package MainGraphicComponents;
 
 import LogicComponents.GlobalInfo;
-import LogicComponents.TransactionsLogic;
 import SecondaryGraphicComponents.TransactionListPanel;
 
 import javax.swing.*;
@@ -9,7 +8,6 @@ import javax.swing.*;
 public class TransactionListTab extends JPanel {
 
     GlobalInfo globalInfo;
-    TransactionsLogic transactionsLogic;
     TransactionListPanel transactionListPanel;
     JScrollPane transactionListScrollPane;
     JButton refreshButton;
@@ -18,15 +16,15 @@ public class TransactionListTab extends JPanel {
     public TransactionListTab(GlobalInfo globalInfo) {
 
         this.globalInfo = globalInfo;
-        transactionsLogic = new TransactionsLogic(globalInfo.getTransactions());
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.initComponents();
         this.addGraphicItems();
     }
 
     private void initComponents() {
-        this.transactionListPanel = new TransactionListPanel(globalInfo, transactionsLogic);
+        this.transactionListPanel = new TransactionListPanel(globalInfo);
         this.transactionListScrollPane = new JScrollPane(transactionListPanel);
+        this.transactionListScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         this.refreshButton = new JButton("Refresh");
         this.deleteSelectedButton = new JButton("Delete Selected");
         this.refreshButton.addActionListener(e -> this.transactionListPanel.localRefresh());

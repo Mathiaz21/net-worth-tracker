@@ -1,5 +1,6 @@
 package SecondaryGraphicComponents;
 
+import CommonConstants.ColorConstants;
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 
@@ -7,6 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.Month;
+
+import static LogicComponents.TransactionsHandler.monthLabel;
 
 public class TransactionGraphicItem extends JPanel {
 
@@ -37,7 +42,7 @@ public class TransactionGraphicItem extends JPanel {
     }
 
     public void updateSelectedState() {
-        if (this.globalInfo.indexIsSelected(this.itemIndex))
+        if (this.globalInfo.transactionsHandler.indexIsSelected(this.itemIndex))
             this.setBackground(this.selectedBackground);
         else
             this.setBackground(null);
@@ -64,10 +69,11 @@ public class TransactionGraphicItem extends JPanel {
 
     private void setLabels() {
 
-        this.dateLabel = new JLabel(this.transaction.getDate().toString());
+        String monthString = printReadableDate(this.transaction.getDate());
+        this.dateLabel = new JLabel( monthString );
         String amountString = printReadableAmount(this.transaction.getAmountInCents());
         this.amountLabel = new JLabel(amountString);
-        this.typeLabel = new JLabel(this.transaction.getType().toString());
+        this.setTypeLabel();
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
         int accountId = 0;
         int categoryId;
@@ -120,8 +126,36 @@ public class TransactionGraphicItem extends JPanel {
         this.descriptionLabel.setPreferredSize(descriptionLabelDimension);
     }
 
+    private void setTypeLabel() {
+
+        this.typeLabel = new JLabel(this.transaction.getType().toString());
+        switch (this.transaction.getType()) {
+            case OUTCOME:
+                this.typeLabel.setForeground(ColorConstants.outcomeColor);
+                break;
+            case INCOME:
+                this.typeLabel.setForeground(ColorConstants.incomeColor);
+                break;
+            case INTERNAL:
+                this.typeLabel.setForeground(Color.gray);
+                break;
+        }
+    }
+
     private String printReadableAmount(int amountInCents) {
-        return amountInCents/100 + "." + amountInCents%100;
+        String stringAmount = amountInCents/100 + ".";
+        int cents = amountInCents%100;
+        if (cents <10)
+            stringAmount += "0";
+        stringAmount += cents;
+        return stringAmount;
+    }
+
+    private String printReadableDate(LocalDate date) {
+        int year = date.getYear();
+        Month month = date.getMonth();
+        int day = date.getDayOfMonth();
+        return day + " " + monthLabel(month) + " " + year;
     }
 
     private void makeSelectable() {
@@ -129,9 +163,9 @@ public class TransactionGraphicItem extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.isShiftDown())
-                    globalInfo.selectRangeOfItems(itemIndex);
+                    globalInfo.transactionsHandler.selectRangeOfItems(itemIndex);
                 else
-                    globalInfo.selectOneItem(itemIndex);
+                    globalInfo.transactionsHandler.selectOneItem(itemIndex);
                 parentTab.updateSelectedStates();
             }
         });

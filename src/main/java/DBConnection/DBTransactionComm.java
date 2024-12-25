@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DBTransactionComm {
 
-    private static final String allTransactionsQuery = "SELECT * FROM transactions";
+    private static final String allTransactionsQuery = "SELECT * FROM transactions ORDER BY transactionDate";
     private static final String insertNewTransactionQuery =
             "INSERT INTO transactions(amountInCents, typeOfTransaction, outcomeAccountId, incomeAccountId, categoryId, description, transactionDate) " +
                     "VALUES (?,?,?,?,?,?,?)";

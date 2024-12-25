@@ -1,6 +1,8 @@
 package MainGraphicComponents;
 
 import LogicComponents.GlobalInfo;
+import SecondaryGraphicComponents.QuarterPanels.TransactionListQuarterPanel;
+import SecondaryGraphicComponents.TransactionListPanel;
 
 import javax.swing.*;
 
@@ -13,7 +15,7 @@ public class MainTabbedPane extends JTabbedPane {
         super();
         this.globalInfo = globalInfo;
         JPanel overviewTab = new OverviewTab(globalInfo);
-        JPanel transactionListTab = new TransactionListTab(globalInfo);
+        JPanel transactionListTab = new TransactionListQuarterPanel(globalInfo, new TransactionListPanel(globalInfo));
         JPanel statsTab = new JPanel();
         statsTab.add(new JLabel("TODO : Stats tab"));
         JPanel accountNCategoryTab = new JPanel();
