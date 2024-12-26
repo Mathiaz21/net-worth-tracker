@@ -1,5 +1,6 @@
 package MainGraphicComponents;
 
+import CommonConstants.DimensionConstants;
 import FunctionalComponents.*;
 import SecondaryGraphicComponents.AddTransactionBarComponents.AmountTextField;
 import SecondaryGraphicComponents.AddTransactionBarComponents.DateTextField;
@@ -37,6 +38,7 @@ public class AddTransactionBar extends JPanel {
         this.localTransaction = new Transaction(-1, LocalDate.now(), 100, TypeOfTransaction.OUTCOME, 0, 0, 0, "");
         this.setupGridBag();
         this.setupSwingComponents();
+        this.setPreferedSizes();
         this.addActionListenersToInputs();
     }
 
@@ -220,5 +222,11 @@ public class AddTransactionBar extends JPanel {
         this.amountTextField.requestFocus();
         this.dateField.reset();
         this.descriptionField.setText("");
+    }
+
+    private void setPreferedSizes() {
+        this.amountTextField.setPreferredSize(DimensionConstants.amountTextFieldSize);
+        this.dateField.setPreferredSize(DimensionConstants.dateTextFieldSize);
+        this.descriptionField.setPreferredSize(DimensionConstants.descriptionTextFieldSize);
     }
 }

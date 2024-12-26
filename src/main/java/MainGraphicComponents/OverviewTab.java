@@ -26,6 +26,6 @@ public class OverviewTab extends JPanel {
         overviewPanels[0] = new BalanceCurvePanel(globalInfo);
         overviewPanels[1] = new TransactionListTab(globalInfo);
         overviewPanels[2] = new MonthlyBarsPanel(globalInfo);
-        overviewPanels[3] = new TransactionModificationPanel();
+        overviewPanels[3] = new TransactionModificationPanel(globalInfo);
     }
 }
