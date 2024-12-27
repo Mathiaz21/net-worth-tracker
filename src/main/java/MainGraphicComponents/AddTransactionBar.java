@@ -2,6 +2,7 @@ package MainGraphicComponents;
 
 import CommonConstants.DimensionConstants;
 import FunctionalComponents.*;
+import LogicComponents.TransactionsHandler;
 import SecondaryGraphicComponents.AddTransactionBarComponents.AmountTextField;
 import SecondaryGraphicComponents.AddTransactionBarComponents.DateTextField;
 import SecondaryGraphicComponents.AddTransactionBarComponents.SubmitButton;
@@ -10,10 +11,7 @@ import LogicComponents.GlobalInfo;
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 
 public class AddTransactionBar extends JPanel {
@@ -38,7 +36,7 @@ public class AddTransactionBar extends JPanel {
         this.localTransaction = new Transaction(-1, LocalDate.now(), 100, TypeOfTransaction.OUTCOME, 0, 0, 0, "");
         this.setupGridBag();
         this.setupSwingComponents();
-        this.setPreferedSizes();
+        this.setPreferredSizes();
         this.addActionListenersToInputs();
     }
 
@@ -73,9 +71,9 @@ public class AddTransactionBar extends JPanel {
 
         this.amountTextField = new AmountTextField(this.localTransaction);
         this.dateField = new DateTextField(this.localTransaction);
-        this.transactionTypeComboBox = new JComboBox();
-        this.accountChoiceComboBox = new JComboBox();
-        this.adaptableComboBox = new JComboBox();
+        this.transactionTypeComboBox = new JComboBox<String>();
+        this.accountChoiceComboBox = new JComboBox<String>();
+        this.adaptableComboBox = new JComboBox<String>();
         this.descriptionField = new JTextField("");
         this.submitButton = new SubmitButton(this.localTransaction, this.globalInfo, this);
 
@@ -96,9 +94,12 @@ public class AddTransactionBar extends JPanel {
 
     private void addActionListenersToInputs() {
         this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
-        setupTransactionTypeComboBox();
-        setupAccountChoiceComboBox();
-        setupAdaptableComboBox();
+//        setupTransactionTypeComboBox();
+        TransactionsHandler.setupTransactionTypeComboBox(this.transactionTypeComboBox, globalInfo, localTransaction, this.adaptableComboBox);
+        TransactionsHandler.resetComboBox(this.accountChoiceComboBox);
+        TransactionsHandler.setupAccountChoiceComboBox(this.accountChoiceComboBox, globalInfo, localTransaction);
+//        setupAdaptableComboBox();
+        TransactionsHandler.setupAdaptableComboBox(this.adaptableComboBox, globalInfo, localTransaction);
     }
 
     private class DescriptionInputListener implements DocumentListener {
@@ -110,112 +111,13 @@ public class AddTransactionBar extends JPanel {
         public void removeUpdate(javax.swing.event.DocumentEvent e) {
             updateDescription();
         }
-        @Override // Only triggered for styled text
+        @Override
         public void changedUpdate(javax.swing.event.DocumentEvent e) {}
         public void updateDescription() {
             localTransaction.setDescription(descriptionField.getText());
         }
     }
 
-    private void setupTransactionTypeComboBox() {
-
-        this.transactionTypeComboBox.removeAllItems();
-        for(TypeOfTransaction typeOfTransaction : TypeOfTransaction.values())
-            this.transactionTypeComboBox.addItem(Transaction.transactionTypeToString(typeOfTransaction));
-
-        this.transactionTypeComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TypeOfTransaction localTransactionType = Transaction.intToTransactionType(transactionTypeComboBox.getSelectedIndex());
-                localTransaction.setType(localTransactionType);
-                setupAdaptableComboBox();
-            }
-        });
-    }
-
-    private void setupAccountChoiceComboBox() {
-
-        resetComboBox(this.accountChoiceComboBox);
-
-        ArrayList<Account> accountList = this.globalInfo.getAccounts();
-        for (Account account : accountList) {
-            this.accountChoiceComboBox.addItem(account.getName());
-        }
-
-        this.accountChoiceComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedAccountIndex = accountChoiceComboBox.getSelectedIndex();
-                TypeOfTransaction localTransactionType = localTransaction.getType();
-                switch (localTransactionType) {
-                    case OUTCOME:
-                    case INTERNAL:
-                        localTransaction.setOutcomeAccountId(selectedAccountIndex); break;
-                    case INCOME:
-                        localTransaction.setIncomeAccountId(selectedAccountIndex); break;
-                }
-            }
-        });
-    }
-
-    private void setupAdaptableComboBox() {
-
-        resetComboBox(this.adaptableComboBox);
-        TypeOfTransaction localTransactionType = localTransaction.getType();
-        switch (localTransactionType){
-            case OUTCOME:
-            case INCOME:
-                setupCategoryComboBox(localTransactionType);break;
-            case INTERNAL:
-                setupSecondAccountComboBox();
-        }
-    }
-
-
-    private void setupCategoryComboBox(TypeOfTransaction typeOfTransaction) {
-
-        ArrayList<Category> categories = switch (typeOfTransaction) {
-            case OUTCOME -> globalInfo.getOutcomeCategories();
-            case INCOME -> globalInfo.getIncomeCategories();
-            case INTERNAL ->
-                    throw new ExceptionInInitializerError("Cannot set up category comboBox for internal transfer");
-        };
-        for (Category category : categories) {
-            this.adaptableComboBox.addItem(category.getName());
-        }
-
-        this.adaptableComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = adaptableComboBox.getSelectedIndex();
-                int categoryIndex = categories.get(selectedIndex).getId();
-                localTransaction.setCategoryId(categoryIndex);
-            }
-        });
-    }
-
-
-    private void setupSecondAccountComboBox() {
-        ArrayList<Account> accounts = globalInfo.getAccounts();
-        for (Account account : accounts) {
-            this.adaptableComboBox.addItem(account.getName());
-        }
-        this.adaptableComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = adaptableComboBox.getSelectedIndex();
-                int accountIndex = accounts.get(selectedIndex).getId();
-                localTransaction.setIncomeAccountId(accountIndex);
-            }
-        });
-    }
-
-    private static void resetComboBox(JComboBox<String> comboBox) {
-        ActionListener[] actionListeners = comboBox.getActionListeners();
-        for (ActionListener actionListener : actionListeners)
-            comboBox.removeActionListener(actionListener);
-        comboBox.removeAllItems();
-    }
 
     public void resetTextFields() {
         this.amountTextField.reset();
@@ -224,7 +126,7 @@ public class AddTransactionBar extends JPanel {
         this.descriptionField.setText("");
     }
 
-    private void setPreferedSizes() {
+    private void setPreferredSizes() {
         this.amountTextField.setPreferredSize(DimensionConstants.amountTextFieldSize);
         this.dateField.setPreferredSize(DimensionConstants.dateTextFieldSize);
         this.descriptionField.setPreferredSize(DimensionConstants.descriptionTextFieldSize);

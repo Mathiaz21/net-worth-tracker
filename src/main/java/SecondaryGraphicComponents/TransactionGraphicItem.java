@@ -1,6 +1,7 @@
 package SecondaryGraphicComponents;
 
 import CommonConstants.ColorConstants;
+import CommonConstants.DimensionConstants;
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
 
@@ -98,6 +99,7 @@ public class TransactionGraphicItem extends JPanel {
 
         this.primaryAccountLabel = new JLabel( globalInfo.accountIndexToName(accountId) );
         this.setPrefSizes();
+        this.setMinSizes();
     }
 
 
@@ -116,14 +118,21 @@ public class TransactionGraphicItem extends JPanel {
     }
 
     private void setPrefSizes() {
-        Dimension littleLabelDimension = new Dimension(150,30);
-        Dimension descriptionLabelDimension = new Dimension(200,30);
-        this.dateLabel.setPreferredSize(littleLabelDimension);
-        this.amountLabel.setPreferredSize(littleLabelDimension);
-        this.typeLabel.setPreferredSize(littleLabelDimension);
-        this.primaryAccountLabel.setPreferredSize(littleLabelDimension);
-        this.multifunctionLabel.setPreferredSize(littleLabelDimension);
-        this.descriptionLabel.setPreferredSize(descriptionLabelDimension);
+        this.dateLabel.setPreferredSize(DimensionConstants.littleTransactionLabelSize);
+        this.amountLabel.setPreferredSize(DimensionConstants.littleTransactionLabelSize);
+        this.typeLabel.setPreferredSize(DimensionConstants.littleTransactionLabelSize);
+        this.primaryAccountLabel.setPreferredSize(DimensionConstants.littleTransactionLabelSize);
+        this.multifunctionLabel.setPreferredSize(DimensionConstants.littleTransactionLabelSize);
+        this.descriptionLabel.setPreferredSize(DimensionConstants.descriptionLabelSize);
+    }
+
+    private void setMinSizes() {
+        this.dateLabel.setMinimumSize(DimensionConstants.littleTransactionLabelMinSize);
+        this.amountLabel.setMinimumSize(DimensionConstants.littleTransactionLabelMinSize);
+        this.typeLabel.setMinimumSize(DimensionConstants.littleTransactionLabelMinSize);
+        this.primaryAccountLabel.setMinimumSize(DimensionConstants.littleTransactionLabelMinSize);
+        this.multifunctionLabel.setMinimumSize(DimensionConstants.littleTransactionLabelMinSize);
+        this.descriptionLabel.setMinimumSize(DimensionConstants.descriptionLabelMinSize);
     }
 
     private void setTypeLabel() {

@@ -1,8 +1,14 @@
 package LogicComponents;
 
 import DBConnection.DBTransactionComm;
+import FunctionalComponents.Account;
+import FunctionalComponents.Category;
 import FunctionalComponents.Transaction;
+import FunctionalComponents.TypeOfTransaction;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.Month;
@@ -192,5 +198,102 @@ public class TransactionsHandler {
             this.selectedMinIndex = newIndex;
         if (newIndex > this.selectedMaxIndex)
             this.selectedMaxIndex = newIndex;
+    }
+
+
+    public static void setupAccountChoiceComboBox(JComboBox<String> accountChoiceComboBox, GlobalInfo globalInfo, Transaction transaction) {
+
+        ArrayList<Account> accountList = globalInfo.getAccounts();
+        for (Account account : accountList) {
+            accountChoiceComboBox.addItem(account.getName());
+        }
+
+        accountChoiceComboBox.addActionListener(e -> {
+            int selectedAccountIndex = accountChoiceComboBox.getSelectedIndex();
+            TypeOfTransaction localTransactionType = transaction.getType();
+            switch (localTransactionType) {
+                case OUTCOME:
+                case INTERNAL:
+                    transaction.setOutcomeAccountId(selectedAccountIndex); break;
+                case INCOME:
+                    transaction.setIncomeAccountId(selectedAccountIndex); break;
+            }
+        });
+    }
+
+    public static void setupTransactionTypeComboBox(JComboBox<String> transactionTypeComboBox,
+                                              GlobalInfo globalInfo,
+                                              Transaction transaction,
+                                              JComboBox<String> adaptableComboBox) {
+
+        transactionTypeComboBox.removeAllItems();
+        for(TypeOfTransaction typeOfTransaction : TypeOfTransaction.values())
+            transactionTypeComboBox.addItem(Transaction.transactionTypeToString(typeOfTransaction));
+
+        transactionTypeComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TypeOfTransaction localTransactionType = Transaction.intToTransactionType(transactionTypeComboBox.getSelectedIndex());
+                transaction.setType(localTransactionType);
+                TransactionsHandler.setupAdaptableComboBox(adaptableComboBox, globalInfo, transaction);
+            }
+        });
+    }
+
+    public static void setupAdaptableComboBox(JComboBox<String> adaptableComboBox, GlobalInfo globalInfo, Transaction transaction) {
+
+        TransactionsHandler.resetComboBox(adaptableComboBox);
+        TypeOfTransaction localTransactionType = transaction.getType();
+        switch (localTransactionType){
+            case OUTCOME:
+            case INCOME:
+                TransactionsHandler.setupCategoryComboBox(adaptableComboBox, globalInfo, transaction);break;
+            case INTERNAL:
+                TransactionsHandler.setupSecondAccountComboBox(adaptableComboBox, globalInfo, transaction);
+        }
+    }
+
+    private static void setupCategoryComboBox(JComboBox<String> categoryComboBox, GlobalInfo globalInfo, Transaction transaction) {
+
+        ArrayList<Category> categories = switch (transaction.getType()) {
+            case OUTCOME -> globalInfo.getOutcomeCategories();
+            case INCOME -> globalInfo.getIncomeCategories();
+            case INTERNAL ->
+                    throw new ExceptionInInitializerError("Cannot set up category comboBox for internal transfer");
+        };
+        for (Category category : categories) {
+            categoryComboBox.addItem(category.getName());
+        }
+
+        categoryComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = categoryComboBox.getSelectedIndex();
+                int categoryIndex = categories.get(selectedIndex).getId();
+                transaction.setCategoryId(categoryIndex);
+            }
+        });
+    }
+
+    private static void setupSecondAccountComboBox(JComboBox<String> secondAccountComboBox, GlobalInfo globalInfo, Transaction transaction) {
+        ArrayList<Account> accounts = globalInfo.getAccounts();
+        for (Account account : accounts) {
+            secondAccountComboBox.addItem(account.getName());
+        }
+        secondAccountComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = secondAccountComboBox.getSelectedIndex();
+                int accountIndex = accounts.get(selectedIndex).getId();
+                transaction.setIncomeAccountId(accountIndex);
+            }
+        });
+    }
+
+    public static void resetComboBox(JComboBox<String> comboBox) {
+        ActionListener[] actionListeners = comboBox.getActionListeners();
+        for (ActionListener actionListener : actionListeners)
+            comboBox.removeActionListener(actionListener);
+        comboBox.removeAllItems();
     }
 }
