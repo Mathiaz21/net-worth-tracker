@@ -4,15 +4,14 @@ import CommonConstants.ColorConstants;
 import CommonConstants.DimensionConstants;
 import LogicComponents.GlobalInfo;
 import FunctionalComponents.Transaction;
+import LogicComponents.TransactionsHandler;
+import SecondaryGraphicComponents.QuarterPanels.TransactionModificationPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.Month;
-
-import static LogicComponents.TransactionsHandler.monthLabel;
+import java.awt.event.MouseListener;
 
 public class TransactionGraphicItem extends JPanel {
 
@@ -34,12 +33,26 @@ public class TransactionGraphicItem extends JPanel {
     JLabel descriptionLabel;
 
     public TransactionGraphicItem(GlobalInfo globalInfo, int itemIndex, TransactionListPanel parentTab) {
+        super();
         this.transaction = globalInfo.getTransactions().get(itemIndex);
         this.globalInfo = globalInfo;
         this.itemIndex = itemIndex;
         this.parentTab = parentTab;
         this.setupSwing();
         makeSelectable();
+    }
+
+    public TransactionGraphicItem(GlobalInfo globalInfo,
+                                  int itemIndex,
+                                  TransactionListPanel parentTab,
+                                  TransactionModificationPanel transactionModificationPanel) {
+
+        this.transaction = globalInfo.getTransactions().get(itemIndex);
+        this.globalInfo = globalInfo;
+        this.itemIndex = itemIndex;
+        this.parentTab = parentTab;
+        this.setupSwing();
+        makeSelectableAndUpdateModifPanel(transactionModificationPanel);
     }
 
     public void updateSelectedState() {
@@ -70,9 +83,9 @@ public class TransactionGraphicItem extends JPanel {
 
     private void setLabels() {
 
-        String monthString = printReadableDate(this.transaction.getDate());
+        String monthString = TransactionsHandler.printReadableDate(this.transaction.getDate());
         this.dateLabel = new JLabel( monthString );
-        String amountString = printReadableAmount(this.transaction.getAmountInCents());
+        String amountString = TransactionsHandler.printReadableAmount(this.transaction.getAmountInCents());
         this.amountLabel = new JLabel(amountString);
         this.setTypeLabel();
         this.descriptionLabel = new JLabel(this.transaction.getDescription());
@@ -151,26 +164,11 @@ public class TransactionGraphicItem extends JPanel {
         }
     }
 
-    private String printReadableAmount(int amountInCents) {
-        String stringAmount = amountInCents/100 + ".";
-        int cents = amountInCents%100;
-        if (cents <10)
-            stringAmount += "0";
-        stringAmount += cents;
-        return stringAmount;
-    }
-
-    private String printReadableDate(LocalDate date) {
-        int year = date.getYear();
-        Month month = date.getMonth();
-        int day = date.getDayOfMonth();
-        return day + " " + monthLabel(month) + " " + year;
-    }
-
     private void makeSelectable() {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                System.out.println("Classic listener triggered");
                 if (e.isShiftDown())
                     globalInfo.transactionsHandler.selectRangeOfItems(itemIndex);
                 else
@@ -178,7 +176,27 @@ public class TransactionGraphicItem extends JPanel {
                 parentTab.updateSelectedStates();
             }
         });
-
     }
 
+    private void makeSelectableAndUpdateModifPanel(TransactionModificationPanel transactionModificationPanel) {
+        this.removeListener();
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Modified listener triggered");
+                if (e.isShiftDown())
+                    globalInfo.transactionsHandler.selectRangeOfItems(itemIndex);
+                else
+                    globalInfo.transactionsHandler.selectOneItem(itemIndex);
+                parentTab.updateSelectedStates();
+                transactionModificationPanel.refreshPanel();
+            }
+        });
+    }
+
+    private void removeListener() {
+        MouseListener[] mouseListeners = this.getMouseListeners();
+        for (MouseListener mouseListener : mouseListeners)
+            this.removeMouseListener(mouseListener);
+    }
 }

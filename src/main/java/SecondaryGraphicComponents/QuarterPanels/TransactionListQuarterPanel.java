@@ -12,9 +12,9 @@ public class TransactionListQuarterPanel extends JPanel {
     TransactionListPanel transactionListPanel;
     JScrollPane transactionListScrollPane;
 
-    public TransactionListQuarterPanel(GlobalInfo globalInfo, TransactionListPanel transactionListPanel) {
+    public TransactionListQuarterPanel(GlobalInfo globalInfo, TransactionModificationPanel transactionModificationPanel) {
         this.globalInfo = globalInfo;
-        this.transactionListPanel = transactionListPanel;
+        this.transactionListPanel = new TransactionListPanel(globalInfo, transactionModificationPanel);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.initComponents();
         this.add(transactionListScrollPane);

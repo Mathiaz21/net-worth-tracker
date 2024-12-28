@@ -2,6 +2,7 @@ package SecondaryGraphicComponents.QuarterPanels;
 
 import FunctionalComponents.Transaction;
 import LogicComponents.GlobalInfo;
+import LogicComponents.TransactionsHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,14 +37,43 @@ public class TransactionModificationPanel extends JPanel {
         addComponents();
     }
 
-    public void refreshFields() {
-        try {
-            Transaction selectedTransaction = this.getSelectedTransaction();
-            this.amountField.setText(selectedTransaction.getAmountInCents() + ""); // TODO : finish the handling of field updates
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void refreshPanel() {
+        if (globalInfo.transactionsHandler.oneTransactionIsSelected()) {
+            try {
+                Transaction transaction = globalInfo.transactionsHandler.getSelectedTransaction();
+                System.out.println("FunctionCalled");
+                refreshFields(transaction);
+            }
+            catch (Exception e) { e.printStackTrace(); }
         }
+        else
+            showEmptyPanel();
+    }
 
+
+    private void refreshFields(Transaction transaction) {
+        this.removeAll();
+        this.addComponents();
+        this.fillComponents(transaction);
+        this.revalidate();
+    }
+
+    private void showEmptyPanel() {
+        this.removeAll();
+        this.add(new JLabel("Select one transaction"));
+        this.revalidate();
+    }
+
+    private void clearPanel() {
+        this.removeAll();
+    }
+
+    private void fillComponents(Transaction transaction) {
+        String amountText = TransactionsHandler.printReadableAmount( transaction.getAmountInCents() );
+        String dateText = TransactionsHandler.printReadableDate( transaction.getDate() );
+        this.amountField.setText(amountText);
+        this.dateField.setText(dateText);
+        this.typeComboBox.setSelectedIndex(0);
     }
 
     private void initLabels() {
@@ -64,17 +94,6 @@ public class TransactionModificationPanel extends JPanel {
         descriptionField = new JTextField();
         submitButton = new JButton("Submit");
     }
-
-    private Transaction getSelectedTransaction() throws Exception {
-        int minIndex = globalInfo.transactionsHandler.getSelectedMinIndex();
-        int maxIndex = globalInfo.transactionsHandler.getSelectedMaxIndex();
-        if (minIndex == maxIndex)
-            return globalInfo.transactionsHandler.listOfTransactions.get(minIndex);
-        else
-            throw new Exception("Several transactions selected");
-    }
-
-
 
 
     private void addComponents() {

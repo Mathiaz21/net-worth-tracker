@@ -3,6 +3,8 @@ package SecondaryGraphicComponents;
 import DBConnection.DBTransactionComm;
 import LogicComponents.GlobalInfo;
 import LogicComponents.TransactionsHandler;
+import MainGraphicComponents.TransactionListTab;
+import SecondaryGraphicComponents.QuarterPanels.TransactionModificationPanel;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,14 +16,29 @@ public class TransactionListPanel extends JPanel {
         super();
         this.globalInfo = globalInfo;
         transactionGraphicItems = new ArrayList<>();
-        int nbTransactions = this.globalInfo.getTransactions().size();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.addGraphicItems();
+    }
+
+    public TransactionListPanel(GlobalInfo globalInfo, TransactionModificationPanel transactionModificationPanel) {
+        super();
+        this.globalInfo = globalInfo;
+        transactionGraphicItems = new ArrayList<>();
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.addGraphicItemsWithModifPanel(transactionModificationPanel);
     }
 
     private void addGraphicItems() {
         for (int i = 0; i < globalInfo.getTransactions().size(); i++) {
             TransactionGraphicItem item = new TransactionGraphicItem(this.globalInfo, i, this);
+            this.transactionGraphicItems.add(item);
+            this.add(item);
+        }
+    }
+
+    private void addGraphicItemsWithModifPanel(TransactionModificationPanel transactionModificationPanel) {
+        for (int i = 0; i < globalInfo.getTransactions().size(); i++) {
+            TransactionGraphicItem item = new TransactionGraphicItem(this.globalInfo, i, this, transactionModificationPanel);
             this.transactionGraphicItems.add(item);
             this.add(item);
         }

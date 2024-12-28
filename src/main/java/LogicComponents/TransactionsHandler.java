@@ -200,6 +200,19 @@ public class TransactionsHandler {
             this.selectedMaxIndex = newIndex;
     }
 
+    public boolean oneTransactionIsSelected() {
+        return this.selectedMinIndex==this.selectedMaxIndex;
+    }
+
+    public int numberOfTransactionsSelected() {
+        return this.selectedMaxIndex - this.selectedMinIndex + 1;
+    }
+
+    public Transaction getSelectedTransaction() throws Exception{
+        if (!oneTransactionIsSelected())
+            throw new Exception("Zero or several transactions are selected");
+        return listOfTransactions.get(this.selectedMinIndex);
+    }
 
     public static void setupAccountChoiceComboBox(JComboBox<String> accountChoiceComboBox, GlobalInfo globalInfo, Transaction transaction) {
 
@@ -295,5 +308,21 @@ public class TransactionsHandler {
         for (ActionListener actionListener : actionListeners)
             comboBox.removeActionListener(actionListener);
         comboBox.removeAllItems();
+    }
+
+    public static String printReadableAmount(int amountInCents) {
+        String stringAmount = amountInCents/100 + ".";
+        int cents = amountInCents%100;
+        if (cents <10)
+            stringAmount += "0";
+        stringAmount += cents;
+        return stringAmount;
+    }
+
+    public static String printReadableDate(LocalDate date) {
+        int year = date.getYear();
+        Month month = date.getMonth();
+        int day = date.getDayOfMonth();
+        return day + " " + monthLabel(month) + " " + year;
     }
 }

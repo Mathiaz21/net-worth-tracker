@@ -94,11 +94,9 @@ public class AddTransactionBar extends JPanel {
 
     private void addActionListenersToInputs() {
         this.descriptionField.getDocument().addDocumentListener(new DescriptionInputListener());
-//        setupTransactionTypeComboBox();
         TransactionsHandler.setupTransactionTypeComboBox(this.transactionTypeComboBox, globalInfo, localTransaction, this.adaptableComboBox);
         TransactionsHandler.resetComboBox(this.accountChoiceComboBox);
         TransactionsHandler.setupAccountChoiceComboBox(this.accountChoiceComboBox, globalInfo, localTransaction);
-//        setupAdaptableComboBox();
         TransactionsHandler.setupAdaptableComboBox(this.adaptableComboBox, globalInfo, localTransaction);
     }
 
